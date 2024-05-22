@@ -2,42 +2,15 @@
 <html lang="en" data-footer="true" data-override='{"attributes": {"placement": "vertical" }}'>
 
 <head>
-    @include('inc.headerCssLink')
+    @include('backend.inc.headerCssLink')
 </head>
 
 <body>
     <div id="root">
-        @include('layouts.nav')
+        @include('backend.layout.nav')
 
         <main>
-            <div class="container">
-                <!-- Title and Top Buttons Start -->
-                <div class="page-title-container">
-                    <div class="row">
-                        <!-- Title Start -->
-                        <div class="col-12 col-md-7">
-                            <h1 class="mb-0 pb-0 display-4" id="title">Vertical Hidden Menu</h1>
-                            <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
-                                <ul class="breadcrumb pt-0">
-                                    <li class="breadcrumb-item"><a href="Dashboards.Default.html">Home</a></li>
-                                    <li class="breadcrumb-item"><a href="Interface.html">Interface</a></li>
-                                    <li class="breadcrumb-item"><a href="Interface.Content.html">Content</a></li>
-                                    <li class="breadcrumb-item"><a href="Interface.Content.Menu.html">Menu</a></li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <!-- Title End -->
-                    </div>
-                </div>
-                <!-- Title and Top Buttons End -->
-
-                <!-- Content Start -->
-                <div class="card mb-2">
-                    <div class="card-body h-100">A vertical menu that newer shows larger pinned version and switches
-                        between mobile view and semi-hidden view.</div>
-                </div>
-                <!-- Content End -->
-            </div>
+            @yield('admin')
         </main>
         <!-- Layout Footer Start -->
         <footer>
@@ -70,22 +43,22 @@
         <!-- Layout Footer End -->
     </div>
     <!-- Theme Settings Modal Start -->
-    @include('inc.themeSettings&NichesModal')
+    @include('backend.inc.themeSettings&NichesModal')
     <!-- Theme Settings Modal End -->
 
     <!-- Niches Modal Start -->
 
-    @include('inc.nichesModal')
+    @include('backend.inc.nichesModal')
     <!-- Niches Modal End -->
 
     <!-- Theme Settings & Niches Buttons Start -->
-    @include('inc.theme_settings_and_niches_button')
+    @include('backend.inc.theme_settings_and_niches_button')
     <!-- Theme Settings & Niches Buttons End -->
 
     <!-- Search Modal Start -->
-    @include('inc.search_modal')
+    @include('backend.inc.search_modal')
     <!-- Search Modal End -->
-    @include('inc.footerScripts')
+    @include('backend.inc.footerScripts')
 </body>
 
 </html>

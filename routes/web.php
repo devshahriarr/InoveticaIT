@@ -19,7 +19,7 @@ Route::middleware('auth')->group(function () {
 
     //routes for dashboard
     Route::get('/home', function () {
-        return view('master');
+        return view('backend.dashboard');
     });
 });
 

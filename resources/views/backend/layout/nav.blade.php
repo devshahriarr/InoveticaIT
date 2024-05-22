@@ -259,34 +259,20 @@
                     <ul id="pages">
                         <li>
                             <a href="#authentication" data-href="Pages.Authentication.html">
-                                <span class="label">Authentication</span>
+                                <span class="label">Home</span>
                             </a>
                             <ul id="authentication">
                                 <li>
                                     <a href="Pages.Authentication.Login.html">
-                                        <span class="label">Login</span>
+                                        <span class="label">Hero Section</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="Pages.Authentication.Register.html">
-                                        <span class="label">Register</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Pages.Authentication.ForgotPassword.html">
-                                        <span class="label">Forgot Password</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Pages.Authentication.ResetPassword.html">
-                                        <span class="label">Reset Password</span>
-                                    </a>
-                                </li>
+
                             </ul>
                         </li>
                         <li>
                             <a href="#blog" data-href="Pages.Blog.html">
-                                <span class="label">Blog</span>
+                                <span class="label">About Us</span>
                             </a>
                             <ul id="blog">
                                 <li>
@@ -313,7 +299,7 @@
                         </li>
                         <li>
                             <a href="#miscellaneous" data-href="Pages.Miscellaneous.html">
-                                <span class="label">Miscellaneous</span>
+                                <span class="label">Service MAnagement</span>
                             </a>
                             <ul id="miscellaneous">
                                 <li>
@@ -377,7 +363,7 @@
                         </li>
                         <li>
                             <a href="#profile" data-href="Pages.Profile.html">
-                                <span class="label">Profile</span>
+                                <span class="label">Team Management</span>
                             </a>
                             <ul id="profile">
                                 <li>
