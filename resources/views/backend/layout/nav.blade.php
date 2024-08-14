@@ -299,12 +299,17 @@
                         </li>
                         <li>
                             <a href="#miscellaneous" data-href="Pages.Miscellaneous.html">
-                                <span class="label">Service MAnagement</span>
+                                <span class="label">Service Management</span>
                             </a>
                             <ul id="miscellaneous">
                                 <li>
-                                    <a href="Pages.Miscellaneous.Faq.html">
-                                        <span class="label">Faq</span>
+                                    <a href="{{ route('backend.service.categories') }}">
+                                        <span class="label">Service Category</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('backend.services') }}">
+                                        <span class="label">Service List</span>
                                     </a>
                                 </li>
                                 <li>
@@ -367,8 +372,8 @@
                             </a>
                             <ul id="profile">
                                 <li>
-                                    <a href="Pages.Profile.Standard.html">
-                                        <span class="label">Standard</span>
+                                    <a href="{{ route('backend.team') }}">
+                                        <span class="label">Team</span>
                                     </a>
                                 </li>
                                 <li>
@@ -441,129 +446,40 @@
                 <li class="mega">
                     <a href="#interface" data-href="Interface.html">
                         <i data-acorn-icon="pocket-knife" class="icon" data-acorn-size="18"></i>
-                        <span class="label">Interface</span>
+                        <span class="label">Store Management</span>
                     </a>
                     <ul id="interface">
                         <li>
                             <a href="#interfaceComponents" data-href="Interface.Components.html">
-                                <span class="label">Components</span>
+                                <span class="label">Product Category</span>
                             </a>
                             <ul id="interfaceComponents">
                                 <li>
-                                    <a href="Interface.Components.Accordion.html">
-                                        <span class="label">Accordion</span>
+                                    <a href="{{ route('backend.product.categories') }}">
+                                        <span class="label">Product Category</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="Interface.Components.Alerts.html">
-                                        <span class="label">Alerts</span>
+                                    <a href="{{ route('backend.product.subcategories') }}">
+                                        <span class="label">Product Subcategory</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="Interface.Components.Badge.html">
-                                        <span class="label">Badge</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Breadcrumb.html">
-                                        <span class="label">Breadcrumb</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Buttons.html">
-                                        <span class="label">Buttons</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.ButtonGroup.html">
-                                        <span class="label">Button Group</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Card.html">
-                                        <span class="label">Card</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Close.html">
-                                        <span class="label">Close Button</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Collapse.html">
-                                        <span class="label">Collapse</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Dropdowns.html">
-                                        <span class="label">Dropdowns</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.ListGroup.html">
-                                        <span class="label">List Group</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Modal.html">
-                                        <span class="label">Modal</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Navs.html">
-                                        <span class="label">Navs</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Offcanvas.html">
-                                        <span class="label">Offcanvas</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Pagination.html">
-                                        <span class="label">Pagination</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Popovers.html">
-                                        <span class="label">Popovers</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Progress.html">
-                                        <span class="label">Progress</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Spinners.html">
-                                        <span class="label">Spinners</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Toasts.html">
-                                        <span class="label">Toasts</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="Interface.Components.Tooltips.html">
-                                        <span class="label">Tooltips</span>
-                                    </a>
-                                </li>
+                                
                             </ul>
                         </li>
                         <li>
                             <a href="#interfaceForms" data-href="Interface.Forms.html">
-                                <span class="label">Forms</span>
+                                <span class="label">Products</span>
                             </a>
                             <ul id="interfaceForms">
                                 <li>
-                                    <a href="Interface.Forms.Layouts.html">
-                                        <span class="label">Layouts</span>
+                                    <a href="{{ route('backend.product') }}">
+                                        <span class="label">Add Product</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="Interface.Forms.Validation.html">
-                                        <span class="label">Validation</span>
+                                    <a href="{{ route('backend.product.list') }}">
+                                        <span class="label">Product List</span>
                                     </a>
                                 </li>
                                 <li>

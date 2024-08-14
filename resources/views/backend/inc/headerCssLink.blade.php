@@ -1,6 +1,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>Acorn Admin Template | Vertical Hidden Menu</title>
+<title>INOVETICA | DASHBOARD</title>
 <meta name="description"
     content="A vertical menu that newer shows larger pinned version and switches between mobile view and semi-hidden view." />
 <!-- Favicon Tags Start -->
@@ -32,27 +32,34 @@
 <meta name="msapplication-square150x150logo" content="{{ asset('assets') }}/img/favicon/mstile-150x150.png" />
 <meta name="msapplication-wide310x150logo" content="{{ asset('assets') }}/img/favicon/mstile-310x150.png" />
 <meta name="msapplication-square310x310logo" content="{{ asset('assets') }}/img/favicon/mstile-310x310.png" />
+
 <!-- Favicon Tags End -->
+<!-- CSRF Token -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 <!-- Font Tags Start -->
 <link rel="preconnect" href="https://fonts.gstatic.com" />
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="{{ asset('assets') }}/font/CS-Interface/style.css" />
 <!-- Font Tags End -->
-    <!-- Vendor Styles Start -->
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/bootstrap.min.css" />
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/OverlayScrollbars.min.css" />
 
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/glide.core.min.css" />
+<!-- Vendor Styles Start -->
+<link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/bootstrap.min.css" />
+<link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/OverlayScrollbars.min.css" />
 
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/introjs.min.css" />
+<link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/glide.core.min.css" />
 
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/select2.min.css" />
+<link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/introjs.min.css" />
 
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/select2-bootstrap4.min.css" />
+<link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/select2.min.css" />
 
-    <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/plyr.css" />
+<link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/select2-bootstrap4.min.css" />
+<link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/bootstrap-datepicker3.standalone.min.css" />
 
+<link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/tagify.css" />
+
+<link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/plyr.css" />
 
 <!-- Vendor Styles End -->
 <!-- Template Base Styles Start -->
@@ -61,3 +68,8 @@
 
 <link rel="stylesheet" href="{{ asset('assets') }}/css/main.css" />
 <script src="{{ asset('assets') }}/js/base/loader.js"></script>
+<link rel="stylesheet" href="{{ asset('assets') }}/js/vendor/sweetalert2/sweetalert2.min.css">
+<!-- jQuery -->
+<script src="{{ asset('assets') }}/js/vendor/jquery-3.5.1.min.js"></script>
+<!-- Toaster Alert css -->
+<script src="{{ asset('assets') }}/js/vendor/toastr/toastr.css"></script>
