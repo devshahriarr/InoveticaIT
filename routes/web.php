@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('/', function () {
+    return view('backend.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -22,13 +22,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
-
-});
 //routes for dashboard
-Route::get('/', function () {
-    return view('backend.dashboard');
-});
+// Route::get('/', function () {
+//     return view('backend.dashboard');
+// });
 
 Route::prefix('backend/services')->group(function () {
     Route::controller(ServiceCategoryController::class)->group(function () {
@@ -86,7 +83,7 @@ Route::prefix('backend/team')->group(function () {
     });
 });
 
-
+});
 
 // Route::prefix('services')->group(function () {
 //     Route::get('/category', [ServiceController::class, 'index'])->name(''); // Show all services

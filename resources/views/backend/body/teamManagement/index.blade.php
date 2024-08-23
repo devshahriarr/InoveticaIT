@@ -69,7 +69,6 @@
                         <th>Image</th>
                         <th>Name</th>
                         <th>Position</th>
-                        <th>Bio</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -108,7 +107,7 @@
                     if (res.status == 200) {
                         $('#addEditModal').modal('hide');
                         $('.teamForm')[0].reset();
-                        toastr.success(res.success);
+                        toastr.success(res.message);
                         teamView(); // Refresh the table data
                     } else {
                         if (res.error.name) {
@@ -121,6 +120,7 @@
                 },
                 error: function(err) {
                     console.error("Error in AJAX request:", err);
+                    toastr.error("An unexpected error occurred.");
                 }
             });
         }
@@ -146,7 +146,7 @@
                 success: function(res) {
                     if (res.status == 200) {
                         const teams = res.data;
-                        console.log(res.data);
+                        // console.log(res.data);
                         $('.showData').empty();
                         if (teams.length > 0) {
                             $.each(teams, function(index, team) {
@@ -157,7 +157,6 @@
                                         <td>${team.image ? `<img src="/uploads/team/${team.image}" alt="Team Image" width="50">` : 'photo not found'}</td>
                                         <td>${team.name ?? ""}</td>
                                         <td>${team.position ?? ""}</td>
-                                        <td>${team.bio ?? ""}</td>
                                         <td>
                                             <a href="#" class="btn btn-outline-primary btn-icon team_edit" data-id="${team.id}" data-bs-toggle="modal" data-bs-target="#addEditModal">
                                                 <i class="fa-solid fa-pen-to-square"></i>
@@ -181,10 +180,12 @@
                         }
                     } else {
                         console.error("Failed to fetch team data:", res.message);
+                        toastr.warning(res.message);
                     }
                 },
                 error: function(err) {
                     console.error("Error in fetching team data:", err);
+                    toastr.error("An unexpected error occurred.");
                 }
             });
         }
@@ -222,11 +223,12 @@
                         $('#showEditImage').attr('src', team.photo_url ? `/uploads/team/${team.photo_url}` : '');
                         $('#addEditConfirmButton').text('Update');
                     } else {
-                        toastr.error(data.message);
+                        toastr.warning(res.message);
                     }
                 },
                 error: function(err) {
                     console.error("Error in fetching team data:", err);
+                    toastr.error("An unexpected error occurred.");
                 }
             });
         });
@@ -234,7 +236,7 @@
         $(document).on('click', '.team_delete', function(e) {
             e.preventDefault();
             let id = this.getAttribute('data-id');
-            alert(id);
+            // alert(id);
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to delete this team member!",
@@ -254,17 +256,20 @@
                         url: `/backend/team/destroy/${id}`,
                         type: 'GET',
                         success: function(res) {
-                            console.log(res);
+                            // console.log(res);
                             if (res.status == 200) {
                                 toastr.success(res.message);
                                 teamView();
                             } else {
                                 toastr.warning(res.message);
+                                toastr.warning(res.message);
                             }
                         },
                         error: function(err) {
-                            console.log(err);
+                            // console.log(err);
                             console.error("Error in deleting team member:", err);
+                            toastr.error("An unexpected error occurred.");
+                            // toastr.warning("Error in deleting team member:", err);
                         }
                     });
                 }

@@ -5,7 +5,8 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use App\Models\Team;
 use Illuminate\Http\Request;
-use Validator;
+use App\Http\Requests\StoreTeamRequest;
+use App\Http\Requests\UpdateTeamRequest;
 
 class TeamController extends Controller
 {
@@ -14,103 +15,148 @@ class TeamController extends Controller
         return view('backend.body.teamManagement.index');
     }
 
-    public function store(Request $request)
+    public function store(StoreTeamRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
-            'position' => 'required|max:100',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
-
-        if ($validator->passes()) {
+        try {
             $team = new Team;
-
-            if ($request->hasFile('image')) {
-                $imageName = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('uploads/team/'), $imageName);
-                $team->image = $imageName;
-            }
-
             $team->name = $request->name;
             $team->position = $request->position;
             $team->status = 1;
+
+            if ($request->hasFile('image')) {
+                $team->image = $this->handleImageUpload($request);
+            }
+
             $team->save();
 
             return response()->json([
                 'status' => 200,
                 'message' => 'Team member added successfully',
             ]);
-        } else {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 500,
-                'errors' => $validator->messages()
-            ]);
+                'message' => 'An unexpected error occurred.',
+            ], 500);
         }
     }
-
-
 
     public function getData()
     {
-        $teamMembers = Team::all();
-        return response()->json([
-            'status' => 200,
-            'data' => $teamMembers
-        ]);
-    }
-    public function edit($id)
-    {
-        $teamMember = Team::findOrFail($id);
-        if ($teamMember) {
+        try {
+            $teamMembers = Team::all();
             return response()->json([
                 'status' => 200,
-                'data' => $teamMember
+                'data' => $teamMembers,
             ]);
-        } else {
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => 500,
-                'message' => 'No Data Found'
+                'message' => 'An unexpected error occurred.',
+            ], 500);
+        }
+    }
+
+    public function edit($id)
+    {
+        try {
+            $teamMember = Team::findOrFail($id);
+            return response()->json([
+                'status' => 200,
+                'data' => $teamMember,
             ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team Member not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'An unexpected error occurred.',
+            ], 500);
         }
     }
-    public function update(Request $request)
+
+    public function update(UpdateTeamRequest $request, $id)
     {
-        $teamMember = Team::findOrFail($request->id);
-        $teamMember->name = $request->name;
-        $teamMember->position = $request->position;
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/team/'), $filename);
-            $teamMember->image = $filename;
+        try {
+            $teamMember = Team::findOrFail($id);
+
+            $teamMember->name = $request->name;
+            $teamMember->position = $request->position;
+
+            if ($request->hasFile('image')) {
+                $teamMember->image = $this->handleImageUpload($request, $teamMember->image);
+            }
+
+            $teamMember->save();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Team member updated successfully.',
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team Member not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'An unexpected error occurred.',
+            ], 500);
         }
-        $teamMember->save();
-
-        return response()->json([
-            'status' => 200,
-            'success' => 'Team member updated successfully.'
-        ]);
-
     }
 
-    public function destroy(Request $id)
+    public function destroy($id)
     {
-        $teamMember = Team::findOrFail($id);
-        if ($teamMember->image) {
-            $previousImagePath = public_path('uploads/team/') . $teamMember->image;
-            if (file_exists($previousImagePath)) {
-                unlink($previousImagePath);
+        try {
+            $teamMember = Team::findOrFail($id);
+
+            if ($teamMember->image) {
+                $this->deleteImage($teamMember->image);
+            }
+
+            $teamMember->delete();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Team Member Deleted Successfully',
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team Member not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'An unexpected error occurred.',
+            ], 500);
+        }
+    }
+
+    private function handleImageUpload(Request $request, $existingImage = null)
+    {
+        if ($existingImage) {
+            $this->deleteImage($existingImage);
+        }
+
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('uploads/team/'), $imageName);
+
+        return $imageName;
+    }
+
+    private function deleteImage($imageName)
+    {
+        $imagePath = public_path('uploads/team/') . $imageName;
+
+        if (file_exists($imagePath)) {
+            if (!unlink($imagePath)) {
+                \Log::error('Failed to delete image: ' . $imagePath);
             }
         }
-        $teamMember->delete();
-        return response()->json([
-            'status' => 200,
-            'message' => 'Team Member Deleted Successfully',
-        ]);
-        
-        // $teamMember = Team::find($request->id);
-        // $teamMember->delete();
-
-        // return response()->json(['success' => 'Team member deleted successfully.']);
     }
 }

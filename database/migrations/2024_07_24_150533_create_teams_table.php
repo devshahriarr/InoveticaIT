@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('image')->nullable(); // URL or path to the team member's photo
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
+            $table->softDeletes(); // This will add a 'deleted_at' column
         });
     }
 
