@@ -5,8 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use App\Models\Team;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreTeamRequest;
-use App\Http\Requests\UpdateTeamRequest;
+use App\Http\Requests\TeamRequest;
 
 class TeamController extends Controller
 {
@@ -15,7 +14,7 @@ class TeamController extends Controller
         return view('backend.body.teamManagement.index');
     }
 
-    public function store(StoreTeamRequest $request)
+    public function store(TeamRequest $request)
     {
         try {
             $team = new Team;
@@ -36,7 +35,7 @@ class TeamController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 500,
-                'message' => 'An unexpected error occurred.',
+                'message' => 'An unexpected error occured.',
             ], 500);
         }
     }
@@ -78,7 +77,7 @@ class TeamController extends Controller
         }
     }
 
-    public function update(UpdateTeamRequest $request, $id)
+    public function update(TeamRequest $request, $id)
     {
         try {
             $teamMember = Team::findOrFail($id);

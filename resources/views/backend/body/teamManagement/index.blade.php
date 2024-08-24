@@ -41,10 +41,12 @@
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="name" name="name" required>
+                                    <span id="name_error" class="text-danger"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label for="position" class="form-label">Position</label>
                                     <input type="text" class="form-control" id="position" name="position" required>
+                                    <span id="position_error" class="text-danger"></span>
                                 </div>
                                 <div class="mb-3">
                                     <label for="image" class="form-label">Image</label>
@@ -82,7 +84,52 @@
 
 <script>
     $(document).ready(function() {
-        // Function to show toastr error
+        
+        // function validateForm() {
+        //     let isValid = true;
+
+        //     // Clear previous error messages
+        //     $('.text-danger').text('');
+        //     $('input').css('border-color', '');
+
+        //     // Get form values
+        //     let name = $('#name').val().trim();
+        //     let position = $('#position').val().trim();
+        //     let image = $('#image').val();
+
+        //     // Validate name
+        //     if (name === '') {
+        //         showError('#name', 'Name is required.');
+        //         isValid = false;
+        //     } else if (name.length > 100) {
+        //         showError('#name', 'Name cannot be longer than 100 characters.');
+        //         isValid = false;
+        //     }
+
+        //     // Validate position
+        //     if (position === '') {
+        //         showError('#position', 'Position is required.');
+        //         isValid = false;
+        //     } else if (position.length > 100) {
+        //         showError('#position', 'Position cannot be longer than 100 characters.');
+        //         isValid = false;
+        //     }
+
+        //     // Validate image (if needed)
+        //     if (image) {
+        //         let fileExtension = image.split('.').pop().toLowerCase();
+        //         let validExtensions = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
+        //         if (!validExtensions.includes(fileExtension)) {
+        //             showError('#image', 'Invalid image format. Allowed formats: jpeg, jpg, png, gif, webp.');
+        //             isValid = false;
+        //         }
+        //     }
+
+        //     return isValid;
+        // }
+
+
+        // Function to show ajax validation error
         function showError(name, message) {
             $(name).css('border-color', 'red');
             $(name).focus();
@@ -91,6 +138,9 @@
 
         // Function to handle form submission
         function handleFormSubmission(url, type, formData) {
+            // if (!validateForm()) {
+            //     return; // If the form is invalid, do not proceed with the AJAX request
+            // }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -109,18 +159,22 @@
                         $('.teamForm')[0].reset();
                         toastr.success(res.message);
                         teamView(); // Refresh the table data
-                    } else {
-                        if (res.error.name) {
-                            showError('#name', res.error.name);
-                        }
-                        if (res.error.position) {
-                            showError('#position', res.error.position);
-                        }
-                    }
+                    } 
                 },
                 error: function(err) {
-                    console.error("Error in AJAX request:", err);
-                    toastr.error("An unexpected error occurred.");
+                    if (err.status === 422) { // Validation error
+                        var errors = err.responseJSON.errors;
+                        if (errors.name) {
+                            showError('#name', errors.name);
+                        }
+                        if (errors.position) {
+                            showError('#position', errors.position);
+                        }
+                        // Handle other validation errors similarly
+                    } else {
+                        console.error("Error in AJAX request:", err);
+                        toastr.error("An unexpected error occurred.");
+                    }
                 }
             });
         }

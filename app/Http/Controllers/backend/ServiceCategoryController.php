@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ServiceCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Requests\ServiceCatRequest;
 
 class ServiceCategoryController extends Controller
 {
@@ -14,9 +15,9 @@ class ServiceCategoryController extends Controller
      */
     public function index()
     {
-        // return view('backend.pages.service.service_category');
+        // return view('backend.body.service.service_category');
         $categories = ServiceCategory::all();
-        return view('backend.pages.service.service_category', compact('categories'));
+        return view('backend.body.service.service_category', compact('categories'));
     }
 
     /**
@@ -30,30 +31,31 @@ class ServiceCategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ServiceCatRequest $request)
     {
-        // dd($request->all());
-        $request->validate([
-            'categoryName' => 'required|max:100',
-            'categoryImage' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
-        $category = new ServiceCategory;
-        if ($request->categoryImage) {
+        // dd($request);
+        try {
+            $category = new ServiceCategory;
+            $category->categoryName = $request->categoryName;
+            $category->slug = Str::slug($request->categoryName);
+            $category->status = 1;
 
-            $imageName = rand() . '.' . $request->categoryImage->extension();
-            $request->categoryImage->move(public_path('uploads/service/categoryImage/'), $imageName);
-            $category->image = $imageName;
+            if ($request->hasFile('image')) {
+                $category->image = $this->handleImageUpload($request);
+            }
+
+            $category->save();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Service Category added successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'An unexpected error occured.',
+            ], 500);
         }
-        
-        $category->categoryName = $request->categoryName;
-        $category->slug = Str::slug($request->categoryName);
-
-        
-
-        
-        // dd($category->$image);
-        $category->save();
-        return back()->with('success', 'Category Successfully Saved');
     }
 
     /**
@@ -62,7 +64,7 @@ class ServiceCategoryController extends Controller
     public function show()
     {
         $categories = ServiceCategory::all();
-        return view('backend.pages.service.service_category', compact('categories'));
+        return view('backend.body.service.service_category', compact('categories'));
     }
 
     /**
