@@ -32,9 +32,9 @@ Route::prefix('backend/services')->group(function () {
         Route::get('/categories', 'index')->name('backend.service.categories');
         Route::post('/category/store', 'store')->name('backend.service.category.store');
         Route::get('/category/view', 'show')->name('category.view');
-        // Route::get('/category/edit/{id}', 'edit')->name('category.edit');
-        // Route::post('/category/update/{id}', 'update')->name('category.update');
-        // Route::get('/category/delete/{id}', 'delete')->name('category.delete');
+        Route::get('/category/edit/{id}', 'edit')->name('category.edit');
+        Route::post('/category/update/{id}', 'update')->name('category.update');
+        Route::get('/category/delete/{id}', 'destroy')->name('category.delete');
     });
     Route::controller(serviceController::class)->group(function () {
         Route::get('/', 'index')->name('backend.services');

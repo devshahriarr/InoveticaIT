@@ -7,7 +7,7 @@ use App\Models\Team;
 use Illuminate\Http\Request;
 use App\Http\Requests\TeamRequest;
 
-class TeamController extends Controller
+class teamController extends Controller
 {
     public function index()
     {

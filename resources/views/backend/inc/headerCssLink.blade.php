@@ -57,8 +57,6 @@
 <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/select2-bootstrap4.min.css" />
 <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/bootstrap-datepicker3.standalone.min.css" />
 
-<link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/tagify.css" />
-
 <link rel="stylesheet" href="{{ asset('assets') }}/css/vendor/plyr.css" />
 
 <!-- Vendor Styles End -->

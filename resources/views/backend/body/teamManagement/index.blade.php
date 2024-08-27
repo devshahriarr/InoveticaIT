@@ -83,64 +83,65 @@
 </div>
 
 <script>
+
+    function validateForm() {
+        let isValid = true;
+
+        // Clear previous error messages
+        $('.text-danger').text('');
+        $('input').css('border-color', '');
+
+        // Get form values
+        let name = $('#name').val().trim();
+        let position = $('#position').val().trim();
+        let image = $('#image').val();
+
+        // Validate name
+        if (name === '') {
+            showError('#name', 'Name is required.');
+            isValid = false;
+        } else if (name.length > 100) {
+            showError('#name', 'Name cannot be longer than 100 characters.');
+            isValid = false;
+        }
+
+        // Validate position
+        if (position === '') {
+            showError('#position', 'Position is required.');
+            isValid = false;
+        } else if (position.length > 100) {
+            showError('#position', 'Position cannot be longer than 100 characters.');
+            isValid = false;
+        }
+
+        // Validate image (if needed)
+        if (image) {
+            let fileExtension = image.split('.').pop().toLowerCase();
+            let validExtensions = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
+            if (!validExtensions.includes(fileExtension)) {
+                showError('#image', 'Invalid image format. Allowed formats: jpeg, jpg, png, gif, webp.');
+                isValid = false;
+            }
+        }
+
+        return isValid;
+    }
+
+
     $(document).ready(function() {
         
-        // function validateForm() {
-        //     let isValid = true;
-
-        //     // Clear previous error messages
-        //     $('.text-danger').text('');
-        //     $('input').css('border-color', '');
-
-        //     // Get form values
-        //     let name = $('#name').val().trim();
-        //     let position = $('#position').val().trim();
-        //     let image = $('#image').val();
-
-        //     // Validate name
-        //     if (name === '') {
-        //         showError('#name', 'Name is required.');
-        //         isValid = false;
-        //     } else if (name.length > 100) {
-        //         showError('#name', 'Name cannot be longer than 100 characters.');
-        //         isValid = false;
-        //     }
-
-        //     // Validate position
-        //     if (position === '') {
-        //         showError('#position', 'Position is required.');
-        //         isValid = false;
-        //     } else if (position.length > 100) {
-        //         showError('#position', 'Position cannot be longer than 100 characters.');
-        //         isValid = false;
-        //     }
-
-        //     // Validate image (if needed)
-        //     if (image) {
-        //         let fileExtension = image.split('.').pop().toLowerCase();
-        //         let validExtensions = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
-        //         if (!validExtensions.includes(fileExtension)) {
-        //             showError('#image', 'Invalid image format. Allowed formats: jpeg, jpg, png, gif, webp.');
-        //             isValid = false;
-        //         }
-        //     }
-
-        //     return isValid;
-        // }
-
-
         // Function to show ajax validation error
         function showError(name, message) {
-            $(name).css('border-color', 'red');
+            $(name).addClass('is-invalid');
             $(name).focus();
             $(`${name}_error`).show().text(message);
         }
 
         // Function to handle form submission
         function handleFormSubmission(url, type, formData) {
-            // if (!validateForm()) {
-            //     return; // If the form is invalid, do not proceed with the AJAX request
-            // }
+            if (!validateForm()) {
+                return; // If the form is invalid, do not proceed with the AJAX request
+            }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

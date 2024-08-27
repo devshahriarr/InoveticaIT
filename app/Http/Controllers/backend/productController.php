@@ -12,7 +12,7 @@ class productController extends Controller
      */
     public function index()
     {
-        return view('backend.pages.service.service_category');
+        return view('backend.body.storeManagement.product.index');
     }
 
     /**
