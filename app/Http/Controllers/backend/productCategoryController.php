@@ -15,9 +15,10 @@ class productCategoryController extends Controller
      */
     public function index()
     {
-        // return view('backend.body.storeManagement.productCategory.category');
-        $product_categories = ProductCategory::all();
-        return view('backend.body.storeManagement.productCategory.category', compact('product_categories'));
+        return view('backend.body.storeManagement.productCategory.category');
+        // $product_categories = ProductCategory::all();
+        // dd($product_categories);
+        // return view('backend.body.storeManagement.productCategory.category', compact('product_categories'));
     }
 
     /**
@@ -74,7 +75,23 @@ class productCategoryController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $categories = ProductCategory::all();
+            return response()->json([
+                "status" => 200,
+                "data" => $categories
+        ]);
+        // try {
+        //     $categories = ProductCategory::all();
+        //     return response()->json([
+        //         'status' => 200,
+        //         'data' => $categories,
+        //     ]);
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         'status' => 500,
+        //         'message' => 'An unexpected error occurred.',
+        //     ], 500);
+        // }
     }
 
     /**

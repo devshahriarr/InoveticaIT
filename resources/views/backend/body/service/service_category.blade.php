@@ -313,7 +313,7 @@
         $(document).on('click', '.cat_edit', function(e) {
             e.preventDefault();
             let id = $(this).data('id');
-            alert(id);
+            // alert(id);
             $.ajax({
                 url: `/backend/services/category/edit/${id}`,
                 type: 'GET',

@@ -30,44 +30,14 @@
                     </div>
                 </div>
             </div>
-            <!-- Basic Single Start -->
-            <!-- <section class="scroll-section" id="basicSingle">
-                <h2 class="small-title">Basic Single</h2>
-                <div class="card mb-5">
-                <div class="card-body">
-                    <div class="row">
-                    <div class="col-12 col-sm-6 col-xl-4">
-                        <div class="w-100">
-                        <label class="form-label">Breads</label>
-                        <select id="select2Basic">
-                            <option label="&nbsp;"></option>
-                            <option value="Breadstick">Breadstick</option>
-                            <option value="Biscotti">Biscotti</option>
-                            <option value="Fougasse">Fougasse</option>
-                            <option value="Lefse">Lefse</option>
-                            <option value="Melonpan">Melonpan</option>
-                            <option value="Naan">Naan</option>
-                            <option value="Panbrioche">Panbrioche</option>
-                            <option value="Rewena">Rewena</option>
-                            <option value="Shirmal">Shirmal</option>
-                            <option value="Tunnbröd">Tunnbröd</option>
-                            <option value="Vánočka">Vánočka</option>
-                            <option value="Zopf">Zopf</option>
-                        </select>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </section> -->
-            <!-- Basic Single End -->
             <div class="card">
                 <div class="card-body">
-                    <form id="signupForm" class="data_category row"
-                        enctype="multipart/form-data" class="row g-3">
+                    <form id="signupForm"
+                        enctype="multipart/form-data" class="productForm row g-3">
+                        @csrf
                         <div class="col-12 col-sm-6 col-md-6 col-xl-4">
                             <label for="validationServer01" class="form-label">Product name</label>
-                            <input type="text" name="Product_name" class="form-control is-valid"
+                            <input type="text" name="name" class="form-control is-valid"
                                 id="validationServer01" value="" required="">
                             <div class="valid-feedback">Looks good!</div>
                             <div id="validationServer01Feedback" class="invalid-feedback">Please provide a valid Name.
@@ -95,58 +65,36 @@
                         <div class="col-12 col-sm-6 col-md-6 col-xl-4">
                             <label class="form-label">Product Image</label>
                             <div class="input-group mb-3">
-                                <input type="file" name="Product_img" class="form-control" id="inputGroupFile02">
+                                <input type="file" name="img" class="form-control" id="inputGroupFile02">
                                 <label class="input-group-text" for="inputGroupFile02">Upload</label>
                             </div>
                         </div>
                         <div class="col-12">
                             <label class="form-label">Product Description</label>
-                            <div class="html-editor sh-19 mb-3" id="quillEditor"></div>
+                            <div class="html-editor sh-19 mb-3" id="quillEditor" name="desc"></div>
                         </div>
-                        <div class="col-12 col-sm-6 col-md-6 col-xl-4">
+                        <div class="col-12 col-sm-6 col-md-6">
                             <label for="validationServer01" class="form-label">Product Price </label>
-                            <input type="number" name="Product_price" class="form-control is-valid"
+                            <input type="number" name="price" class="form-control is-valid"
                                 id="validationServer01" value="" required="">
                             <div class="valid-feedback">Looks good!</div>
                             <div id="validationServer01Feedback" class="invalid-feedback">Please provide a valid Name.
                             </div>
                         </div>
-                        <div class="col-12 col-sm-6 col-md-6 col-xl-4">
-                            <label for="validationServer01" class="form-label">Product Price </label>
-                            <input type="number" name="Product_price" class="form-control is-valid"
+                        <div class="col-12 col-sm-6 col-md-6">
+                            <label for="validationServer01" class="form-label">Product URL</label>
+                            <input type="number" name="pr_link" class="form-control is-valid"
                                 id="validationServer01" value="" required="">
                             <div class="valid-feedback">Looks good!</div>
                             <div id="validationServer01Feedback" class="invalid-feedback">Please provide a valid Name.
                             </div>
                         </div>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <!-- <div class="col-12 col-sm-6 col-md-12 col-xl-4">
-                            <div class="mb-3" id="outside">
-                                <label class="d-block form-label">Breads</label>
-                                <input id="tagsOutside" class="tagify--outside" value="Dorayaki, Roti, Panbrioche" placeholder="Write Tags" />
-                            </div>
-                            <button class="btn btn-primary" id="removeAllTags" type="button">Remove All!</button>
-                        </div> -->
                         <div class="col-12">
-                            <label class="d-block form-label">Breads</label>
-                            <input id="tagsOutside" class="tagify--outside my-5" value="Dorayaki, Roti, Panbrioche" placeholder="Write Tags" />
-                            <button class="btn btn-primary" type="submit">Submit form</button>
-                            
+                            <label class="d-block form-label">Product Tags</label>
+                            <input id="tagsOutside" name="pr_tags" class="tagify--outside my-5" value="Dorayaki, Roti, Panbrioche" placeholder="Write Tags" />
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-primary save_button" type="submit">Submit form</button>
+                            <button class="btn btn-primary save_product" type="submit">Submit form</button>
                         </div>
                     </form>
                 </div>
@@ -161,9 +109,9 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form class="teamForm" enctype="multipart/form-data">
+                            <form class="productForm" enctype="multipart/form-data">
                                 @csrf
-                                <input type="hidden" id="teamId" name="id">
+                                <input type="hidden" id="product_id" name="id">
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" class="form-control" id="name" name="name" required>
@@ -183,7 +131,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary save_team" id="addEditConfirmButton">Save</button>
+                            <button type="button" class="btn btn-primary save_product" id="addEditConfirmButton">Save</button>
                         </div>
                     </div>
                 </div>
@@ -305,7 +253,7 @@ tagify.on('add', function(e) {
                     success: function(res) {
                         if (res.status == 200) {
                             $('#addEditModal').modal('hide');
-                            $('.teamForm')[0].reset();
+                            $('.productForm')[0].reset();
                             toastr.success(res.message);
                             teamView(); // Refresh the table data
                         } 
@@ -329,10 +277,10 @@ tagify.on('add', function(e) {
             }
 
             // Event listener for save button
-            $('.save_team').on('click', function(e) {
+            $('.save_product').on('click', function(e) {
                 e.preventDefault();
-                let formData = new FormData($('.teamForm')[0]);
-                let id = $('#teamId').val();
+                let formData = new FormData($('.productForm')[0]);
+                let id = $('#product_id').val();
 
                 if (id) {
                     handleFormSubmission(`/backend/team/update/${id}`, 'POST', formData);
@@ -397,14 +345,14 @@ tagify.on('add', function(e) {
             teamView();
 
             // Event listener for add new button
-            $('#addNewButton').click(function() {
-                $('#modalTitle').text('Add New');
-                $('#teamId').val('');
-                $('#name').val('');
-                $('#position').val('');
-                $('#showEditImage').attr('src', '');
-                $('#addEditConfirmButton').text('Add');
-            });
+            // $('#addNewButton').click(function() {
+            //     $('#modalTitle').text('Add New');
+            //     $('#product_id').val('');
+            //     $('#name').val('');
+            //     $('#position').val('');
+            //     $('#showEditImage').attr('src', '');
+            //     $('#addEditConfirmButton').text('Add');
+            // });
 
             // Event listener for edit button
             $(document).on('click', '.team_edit', function(e) {
@@ -420,7 +368,7 @@ tagify.on('add', function(e) {
                             // alert("hello world");
                             const team = data.data;
                             $('#modalTitle').text('Edit Team Member');
-                            $('#teamId').val(team.id);
+                            $('#product_id').val(team.id);
                             $('#name').val(team.name);
                             $('#position').val(team.position);
                             $('#showEditImage').attr('src', team.photo_url ? `/uploads/team/${team.photo_url}` : '');

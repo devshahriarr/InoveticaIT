@@ -49,7 +49,8 @@ Route::prefix('backend/product')->group(function () {
     Route::controller(productCategoryController::class)->group(function () {
         Route::get('/categories', 'index')->name('backend.product.categories');
         Route::post('/category/store', 'store')->name('backend.product.category.store');
-        // Route::get('/category/view', 'show')->name('category.view');
+        // Route::get('/data', 'getData')->name('backend.team.data');
+        Route::get('/category/view', 'show')->name('product.category.view');
         // Route::get('/category/edit/{id}', 'edit')->name('category.edit');
         // Route::post('/category/update/{id}', 'update')->name('category.update');
         // Route::get('/category/delete/{id}', 'delete')->name('category.delete');
