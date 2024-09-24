@@ -187,4 +187,20 @@ class ServiceCategoryController extends Controller
             }
         }
     }
+    public function changeStatus($catId){
+
+        $category = ServiceCategory::findOrFail($catId); // Find the category by ID
+
+        // dd($catId);
+        $newStatus = $category->status == 0 ? 1 : 0;
+        $category->update([
+            'status' => $newStatus
+        ]);
+        return response()->json([
+            'status' => 200,
+            'newStatus' => $newStatus,
+            'message' => 'Status Changed Successfully',
+        ]);
+        
+    }
 }

@@ -35,6 +35,7 @@ Route::prefix('backend/services')->group(function () {
         Route::get('/category/edit/{id}', 'edit')->name('category.edit');
         Route::post('/category/update/{id}', 'update')->name('category.update');
         Route::get('/category/delete/{id}', 'destroy')->name('category.delete');
+        Route::post('/category/status/{catId}', 'changeStatus')->name('backend.service.category.status');
     });
     Route::controller(serviceController::class)->group(function () {
         Route::get('/', 'index')->name('backend.services');
@@ -53,9 +54,9 @@ Route::prefix('backend/product')->group(function () {
         Route::get('/category/view', 'show')->name('product.category.view');
         
         Route::post('/category/status/{catId}', 'changeStatus')->name('category.status');
-        // Route::get('/category/edit/{id}', 'edit')->name('category.edit');
-        // Route::post('/category/update/{id}', 'update')->name('category.update');
-        // Route::get('/category/delete/{id}', 'delete')->name('category.delete');
+        Route::get('/category/edit/{id}', 'edit')->name('product.category.edit');
+        Route::post('/category/update/{id}', 'update')->name('product.category.update');
+        Route::get('/category/delete/{id}', 'delete')->name('product.category.delete');
     });
     Route::controller(productSubCategoryController::class)->group(function () {
         Route::get('/subcategories', 'index')->name('backend.product.subcategories');

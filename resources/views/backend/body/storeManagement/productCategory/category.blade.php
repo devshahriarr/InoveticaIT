@@ -25,7 +25,7 @@
     </div>
     <!-- Title and Top Buttons End -->
     <section class="scroll-section my-5" id="bootstrapServerSide">
-        <h2 class="small-title">Add Product Category</h2>
+        <h2 class="small-title" id="pr_form_title">Add Product Category</h2>
         <div class="card">
             <div class="card-body">
                 <form id="signupForm" class="data_category row"
@@ -33,20 +33,21 @@
                     <div class="col-12 pb-5">
                         <label for="validationServer01" class="form-label">Category name</label>
                         <input type="text" name="categoryName" onkeyup="errorRemove(this);" onblur="errorRemove(this);" class="form-control cat_name "
-                            id="validationServer01" value="">
+                            id="cat_name" value="">
                         <!-- <span class="text-danger cat_name_error">this is a not valid </span> -->
                         <div class="valid-feedback error_msg">Looks good!</div>
                         <div id="validationServer01Feedback" class="invalid-feedback cat_name_error">Please provide a valid Name.
                         </div>
                     </div>
+                    <input type="hidden" id="catId" name="id" readonly>
                     <div class="col-12">
                         <div class="input-group mb-3">
-                            <input type="file" name="categoryImage" class="form-control" id="inputGroupFile02">
-                            <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                            <input type="file" name="categoryImage" class="form-control" id="cat_image">
+                            <label class="input-group-text" for="cat_image">Upload</label>
                         </div>
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-primary save_button" type="submit">Submit form</button>
+                        <button class="btn btn-primary save_button" id="saveBtn" type="submit">Submit form</button>
                     </div>
                 </form>
             </div>
@@ -87,6 +88,11 @@
         }
     }
     $(document).ready(function() {
+
+        // Store the original values of the form title and button text
+        const originalTitle = $('#pr_form_title').text();
+        const originalButtonText = $('#saveBtn').text();
+        
         // show error
         function showError(name, message) {
             // alert('hello');
@@ -94,39 +100,108 @@
             $(name).focus(); // Set focus to the input field
             $(`${name}_error`).show().text(message); // Show error message
         }
-        // save category
-        const savecat = document.querySelector('.save_button');
-        savecat.addEventListener('click', function(e) {
-
-            e.preventDefault();
-            let formData = new FormData($('.data_category')[0]);
+        
+        // Function to handle form submission
+        function handleFormSubmission(url, type, formData) {
+            
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $.ajax({
 
-                url: 'category/store',
-                type: 'POST',
+            $.ajax({
+                url: url,
+                type: type,
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function(res) {
                     if (res.status == 200) {
+                        // $('#addEditModal').modal('hide');
                         $('.data_category')[0].reset();
-                        catView();
                         toastr.success(res.message);
-                    } else {
+                        catView(); // Refresh the table data
 
-                        console.log(res);
-                        if (res.error.categoryName) {
-                            showError('.cat_name', res.error.categoryName);
+                        // Restore original form title and button text
+                        $('#pr_form_title').text(originalTitle);
+                        $('#saveBtn').text(originalButtonText);
+                    } 
+                    else {
+                        // Handle validation errors
+                        if (res.errors) {
+                            for (let [field, messages] of Object.entries(res.errors)) {
+                                showError(`#${field}`, messages[0]);
+                            }
                         }
+                    }
+                },
+                error: function(err) {
+                    // alert(err.responseJSON.errors);
+                    if (err.status === 422) { // Validation error
+                        var errors = err.responseJSON.errors;
+                        if (errors.categoryName ) {
+                            showError('#cat_name', errors.categoryName );
+                        }
+                        if (errors.categoryImage ) {
+                            showError('#cat_image', errors.categoryImage );
+                        }
+                        // Handle other validation errors similarly
+                    } else {
+                        console.error("Error in AJAX request:", err);
+                        toastr.error("An unexpected error occurred.");
                     }
                 }
             });
-        })
+        }
+
+        // Event listener for save button
+        $('.save_button').on('click', function(e) {
+            e.preventDefault();
+            let formData = new FormData($('.data_category')[0]);
+            let id = $('#catId').val();
+            alert(id);
+
+            if (id) {
+                handleFormSubmission(`/backend/product/category/update/${id}`, 'POST', formData);
+            } else {
+                handleFormSubmission('{{ route("backend.product.category.store") }}', 'POST', formData);
+            }
+        });
+
+        // save category
+        // const savecat = document.querySelector('.save_button');
+        // savecat.addEventListener('click', function(e) {
+
+        //     e.preventDefault();
+        //     let formData = new FormData($('.data_category')[0]);
+        //     $.ajaxSetup({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         }
+        //     });
+        //     $.ajax({
+
+        //         url: 'category/store',
+        //         type: 'POST',
+        //         data: formData,
+        //         processData: false,
+        //         contentType: false,
+        //         success: function(res) {
+        //             if (res.status == 200) {
+        //                 $('.data_category')[0].reset();
+        //                 catView();
+        //                 toastr.success(res.message);
+        //             } else {
+
+        //                 console.log(res);
+        //                 if (res.error.categoryName) {
+        //                     showError('.cat_name', res.error.categoryName);
+        //                 }
+        //             }
+        //         }
+        //     });
+        // })
 
         function catView() {
             $.ajax({
@@ -145,17 +220,17 @@
                                         <tr>
                                             <td>${index + 1}</td>
                                             
-                                            <td>${category.image ? `<img src="/uploads/store/product/categoryImage/${category.image}" alt="category Image" width="50">` : 'photo not found'}</td>
+                                            <td>${category.image ? `<img src="/uploads/product/category/${category.image}" alt="category Image" width="50">` : 'photo not found'}</td>
                                             <td>${category.categoryName ?? ""}</td>
                                             <td>
                                                 <button id="catStatusBtn${category.id}" class="catStatusBtn badge text-uppercase ${category.status != 0 ? 'bg-danger' : 'bg-success' } categoryButton" data-id="${category.id}">${category.status != 0 ? 'Inactive' : 'Active'}</button>
                                             </td>
                                             <td>
-                                                <a href="#" class="btn btn-outline-primary btn-icon category_edit" data-id="${category.id}" data-bs-toggle="modal" data-bs-target="#addEditModal">
+                                                <a href="#" class="btn btn-outline-primary btn-icon cat_edit" data-id="${category.id}" data-bs-toggle="modal" data-bs-target="#addEditModal">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="acorn-icons acorn-icons-edit-square undefined"><path d="M11 2L5.5 2C4.09554 2 3.39331 2 2.88886 2.33706C2.67048 2.48298 2.48298 2.67048 2.33706 2.88886C2 3.39331 2 4.09554 2 5.5L2 14.5C2 15.9045 2 16.6067 2.33706 17.1111C2.48298 17.3295 2.67048 17.517 2.88886 17.6629C3.39331 18 4.09554 18 5.5 18L14.5 18C15.9045 18 16.6067 18 17.1111 17.6629C17.3295 17.517 17.517 17.3295 17.6629 17.1111C18 16.6067 18 15.9045 18 14.5L18 11"></path><path d="M15.4978 3.06224C15.7795 2.78052 16.1616 2.62225 16.56 2.62225C16.9585 2.62225 17.3405 2.78052 17.6223 3.06224C17.904 3.34396 18.0623 3.72605 18.0623 4.12446C18.0623 4.52288 17.904 4.90497 17.6223 5.18669L10.8949 11.9141L8.06226 12.6223L8.7704 9.78966L15.4978 3.06224Z"></path></svg>
                                                 </a>
-                                                <a href="#" class="btn btn-outline-danger btn-icon category_delete" data-id="${category.id}">
+                                                <a href="#" class="btn btn-outline-danger btn-icon cat_delete" data-id="${category.id}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="acorn-icons acorn-icons-bin undefined"><path d="M4 5V14.5C4 15.9045 4 16.6067 4.33706 17.1111C4.48298 17.3295 4.67048 17.517 4.88886 17.6629C5.39331 18 6.09554 18 7.5 18H12.5C13.9045 18 14.6067 18 15.1111 17.6629C15.3295 17.517 15.517 17.3295 15.6629 17.1111C16 16.6067 16 15.9045 16 14.5V5"></path><path d="M14 5L13.9424 4.74074C13.6934 3.62043 13.569 3.06028 13.225 2.67266C13.0751 2.50368 12.8977 2.36133 12.7002 2.25164C12.2472 2 11.6734 2 10.5257 2L9.47427 2C8.32663 2 7.75281 2 7.29981 2.25164C7.10234 2.36133 6.92488 2.50368 6.77496 2.67266C6.43105 3.06028 6.30657 3.62044 6.05761 4.74074L6 5"></path><path d="M2 5H18M12 9V13M8 9V13"></path></svg>
                                                 </a>
                                             </td>
@@ -184,6 +259,73 @@
         }
         // Initial load of category data
         catView();
+
+        $(document).on('click', '.cat_edit', function(e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+            // alert(id);
+            $.ajax({
+                url: `/backend/product/category/edit/${id}`,
+                type: 'GET',
+                success: function(res) {
+                    if (res.status === 200) {
+                        const data = res.data;
+                        $('#pr_form_title').text('Edit Service Category');
+                        $('#catId').val(data.id);
+                        $('#cat_name').val(data.categoryName);
+                        $('#cat_image').attr('src', data.image ? `/uploads/product/category/${data.image}` : '');
+                        $('#saveBtn').text('Update');
+                    } else {
+                        toastr.warning(res.message);
+                    }
+                },
+                error: function(err) {
+                    console.error("Error in fetching Service Category data:", err);
+                    toastr.error("An unexpected error occurred.");
+                }
+            });
+        });
+
+        $(document).on('click', '.cat_delete', function(e) {
+            e.preventDefault();
+            let id = this.getAttribute('data-id');
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to delete this Product Category!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: `/backend/product/category/delete/${id}`,
+                        type: 'GET',
+                        success: function(res) {
+                            if (res.status == 200) {
+                                toastr.success(res.message);
+                                catView();
+                            } else {
+                                toastr.warning(res.message);
+                                toastr.warning(res.message);
+                            }
+                        },
+                        error: function(err) {
+                            console.error("Error in deleting Product Category:", err);
+                            toastr.error("An unexpected error occurred.");
+                            // toastr.warning("Error in deleting Product Category:", err);
+                        }
+                    });
+                }
+            });
+        });
+
 
         $('.showData').on('click', '.catStatusBtn', function() {
             var catId = $(this).data('id');
