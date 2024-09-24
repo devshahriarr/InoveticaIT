@@ -51,6 +51,8 @@ Route::prefix('backend/product')->group(function () {
         Route::post('/category/store', 'store')->name('backend.product.category.store');
         // Route::get('/data', 'getData')->name('backend.team.data');
         Route::get('/category/view', 'show')->name('product.category.view');
+        
+        Route::post('/category/status/{catId}', 'changeStatus')->name('category.status');
         // Route::get('/category/edit/{id}', 'edit')->name('category.edit');
         // Route::post('/category/update/{id}', 'update')->name('category.update');
         // Route::get('/category/delete/{id}', 'delete')->name('category.delete');
@@ -64,9 +66,10 @@ Route::prefix('backend/product')->group(function () {
         // Route::get('/category/delete/{id}', 'delete')->name('category.delete');
     });
     Route::controller(productController::class)->group(function () {
-        Route::get('/', 'index')->name('backend.product');
-        // Route::post('/store', 'store')->name('backend.product.store');
-        Route::get('/category/view', 'show')->name('backend.product.list');
+        Route::get('/all', 'index')->name('backend.product');
+        Route::get('/', 'allProducts')->name('backend.product.data');
+        Route::post('/store', 'store')->name('backend.product.add');
+        Route::get('/list/view', 'show')->name('backend.product.list');
         // Route::get('/category/edit/{id}', 'edit')->name('category.edit');
         // Route::post('/category/update/{id}', 'update')->name('category.update');
         // Route::get('/category/delete/{id}', 'delete')->name('category.delete');

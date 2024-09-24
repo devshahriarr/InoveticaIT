@@ -18,6 +18,10 @@ class productController extends Controller
     /**
      * Show the form for creating a new resource.
      */
+    public function allProducts()
+    {
+        //
+    }
     public function create()
     {
         //
@@ -28,7 +32,29 @@ class productController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // @dd($request);
+        $products = new Product;
+        $products->product_name = $request->name;
+        $products->product_slug = Str::slug($request->name);
+        $products->secure_token = '';
+        $products->product_desc = $request->quillEditor;
+        $products->product_img = $request->img;
+        $products->product_tags = $request->pr_tags;
+        $products->product_price = $request->price;
+        $products->product_link = $request->pr_link;
+        $products->status = 1;
+        $products->product_cat_id = $request->Product_cat;
+
+        if ($request->hasFile('image')) {
+            $products->product_img = $this->handleImageUpload($request);
+        }
+
+        $products->save();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'New Product added successfully',
+        ]);
     }
 
     /**

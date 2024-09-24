@@ -73,7 +73,7 @@ class productCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show()
     {
         $categories = ProductCategory::all();
             return response()->json([
@@ -93,7 +93,22 @@ class productCategoryController extends Controller
         //     ], 500);
         // }
     }
+    public function changeStatus($catId){
 
+        $category = ProductCategory::findOrFail($catId); // Find the category by ID
+
+        // dd($catId);
+        $newStatus = $category->status == 0 ? 1 : 0;
+        $category->update([
+            'status' => $newStatus
+        ]);
+        return response()->json([
+            'status' => 200,
+            'newStatus' => $newStatus,
+            'message' => 'Status Changed Successfully',
+        ]);
+        
+    }
     /**
      * Show the form for editing the specified resource.
      */

@@ -17,8 +17,6 @@
 
     <script src="{{ asset('assets') }}/js/vendor/datepicker/bootstrap-datepicker.min.js"></script>
 
-    <script src="{{ asset('assets') }}/js/vendor/tagify.min.js"></script>
-
     <script src="{{ asset('assets') }}/js/vendor/Chart.bundle.min.js"></script>
 
     <script src="{{ asset('assets') }}/js/vendor/chartjs-plugin-datalabels.js"></script>

@@ -32,15 +32,15 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <form id="signupForm"
+                    <form id="productAddForm"
                         enctype="multipart/form-data" class="productForm row g-3">
                         @csrf
                         <div class="col-12 col-sm-6 col-md-6 col-xl-4">
-                            <label for="validationServer01" class="form-label">Product name</label>
-                            <input type="text" name="name" class="form-control is-valid"
-                                id="validationServer01" value="" required="">
+                            <label for="" class="form-label">Product name</label>
+                            <input type="text" name="name" class="form-control"
+                                id="" value="" required="">
                             <div class="valid-feedback">Looks good!</div>
-                            <div id="validationServer01Feedback" class="invalid-feedback">Please provide a valid Name.
+                            <div id="Feedback" class="invalid-feedback">Please provide a valid Name.
                             </div>
                         </div>
                         @php
@@ -74,19 +74,17 @@
                             <div class="html-editor sh-19 mb-3" id="quillEditor" name="desc"></div>
                         </div>
                         <div class="col-12 col-sm-6 col-md-6">
-                            <label for="validationServer01" class="form-label">Product Price </label>
-                            <input type="number" name="price" class="form-control is-valid"
-                                id="validationServer01" value="" required="">
-                            <div class="valid-feedback">Looks good!</div>
-                            <div id="validationServer01Feedback" class="invalid-feedback">Please provide a valid Name.
-                            </div>
+                            <label for="" class="form-label">Product Price </label>
+                            <input type="number" name="price" class="form-control"
+                                id="" value="" required="">
+                           
                         </div>
                         <div class="col-12 col-sm-6 col-md-6">
-                            <label for="validationServer01" class="form-label">Product URL</label>
-                            <input type="number" name="pr_link" class="form-control is-valid"
-                                id="validationServer01" value="" required="">
+                            <label for="" class="form-label">Product URL</label>
+                            <input type="text" name="pr_link" class="form-control"
+                                id="" value="" required="">
                             <div class="valid-feedback">Looks good!</div>
-                            <div id="validationServer01Feedback" class="invalid-feedback">Please provide a valid Name.
+                            <div id="Feedback" class="invalid-feedback">Please provide a valid Name.
                             </div>
                         </div>
                         <div class="col-12">
@@ -97,43 +95,6 @@
                             <button class="btn btn-primary save_product" type="submit">Submit form</button>
                         </div>
                     </form>
-                </div>
-            </div>
-
-            <!-- Add/Edit Modal -->
-            <div class="modal modal-right fade" id="addEditModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalTitle">Add New</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form class="productForm" enctype="multipart/form-data">
-                                @csrf
-                                <input type="hidden" id="product_id" name="id">
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" required>
-                                    <span id="name_error" class="text-danger"></span>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="position" class="form-label">Position</label>
-                                    <input type="text" class="form-control" id="position" name="position" required>
-                                    <span id="position_error" class="text-danger"></span>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="image" class="form-label">Image</label>
-                                    <input type="file" class="form-control" id="image" name="image">
-                                    <img id="showEditImage" src="" alt="" width="50">
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary save_product" id="addEditConfirmButton">Save</button>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -180,58 +141,94 @@ tagify.on('add', function(e) {
     // You can add your custom functionality here
 });
 
-        function validateForm() {
-            let isValid = true;
+function validateForm() {
+    let isValid = true;
 
-            // Clear previous error messages
-            $('.text-danger').text('');
-            $('input').css('border-color', '');
+    // Clear previous error messages
+    $('.text-danger').text('');
+    $('input, select').css('border-color', '');
 
-            // Get form values
-            let name = $('#name').val().trim();
-            let position = $('#position').val().trim();
-            let image = $('#image').val();
+    // Get form values
+    let name = $('input[name="name"]').val().trim();
+    let productCategory = $('select[name="Product_cat"]').val();
+    let image = $('input[name="img"]').val();
+    let description = $('#quillEditor').text().trim();
+    let price = $('input[name="price"]').val().trim();
+    let url = $('input[name="pr_link"]').val().trim();
+    let tags = $('input[name="pr_tags"]').val().trim();
 
-            // Validate name
-            if (name === '') {
-                showError('#name', 'Name is required.');
-                isValid = false;
-            } else if (name.length > 100) {
-                showError('#name', 'Name cannot be longer than 100 characters.');
-                isValid = false;
-            }
+    // Validate product name
+    if (name === '') {
+        showError('input[name="name"]', 'Product name is required.');
+        isValid = false;
+    } else if (name.length > 100) {
+        showError('input[name="name"]', 'Product name cannot exceed 100 characters.');
+        isValid = false;
+    }
 
-            // Validate position
-            if (position === '') {
-                showError('#position', 'Position is required.');
-                isValid = false;
-            } else if (position.length > 100) {
-                showError('#position', 'Position cannot be longer than 100 characters.');
-                isValid = false;
-            }
+    // Validate product category
+    if (!productCategory) {
+        showError('select[name="Product_cat"]', 'Please select a product category.');
+        isValid = false;
+    }
 
-            // Validate image (if needed)
-            if (image) {
-                let fileExtension = image.split('.').pop().toLowerCase();
-                let validExtensions = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
-                if (!validExtensions.includes(fileExtension)) {
-                    showError('#image', 'Invalid image format. Allowed formats: jpeg, jpg, png, gif, webp.');
-                    isValid = false;
-                }
-            }
-
-            return isValid;
+    // Validate product image (optional, only if provided)
+    if (image) {
+        let fileExtension = image.split('.').pop().toLowerCase();
+        let validExtensions = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
+        if (!validExtensions.includes(fileExtension)) {
+            showError('input[name="img"]', 'Invalid image format. Allowed formats: jpeg, jpg, png, gif, webp.');
+            isValid = false;
         }
+    }
 
+    // Validate product description
+    if (description === '') {
+        showError('#quillEditor', 'Product description is required.');
+        isValid = false;
+    }
+
+    // Validate product price
+    if (price === '') {
+        showError('input[name="price"]', 'Product price is required.');
+        isValid = false;
+    } else if (isNaN(price) || parseFloat(price) <= 0) {
+        showError('input[name="price"]', 'Please enter a valid price.');
+        isValid = false;
+    }
+
+    // Validate product URL
+    let urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+    if (url === '') {
+        showError('input[name="pr_link"]', 'Product URL is required.');
+        isValid = false;
+    } else if (!urlPattern.test(url)) {
+        showError('input[name="pr_link"]', 'Please provide a valid URL.');
+        isValid = false;
+    }
+
+    // Validate product tags (optional, only if provided)
+    if (tags && tags.split(',').length > 5) {
+        showError('input[name="pr_tags"]', 'You can only enter up to 5 tags.');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function showError(selector, message) {
+    $(selector).css('border-color', 'red');
+    $(selector).next('.invalid-feedback').text(message).show();
+}
 
         $(document).ready(function() {
             
             // Function to show ajax validation error
-            function showError(name, message) {
-                $(name).addClass('is-invalid');
-                $(name).focus();
-                $(`${name}_error`).show().text(message);
-            }
+            // function showError(name, message) {
+            //     $(name).addClass('is-invalid');
+            //     $(name).focus();
+            //     $(`${name}_error`).show().text(message);
+            // }
 
             // Function to handle form submission
             function handleFormSubmission(url, type, formData) {
@@ -252,10 +249,9 @@ tagify.on('add', function(e) {
                     contentType: false,
                     success: function(res) {
                         if (res.status == 200) {
-                            $('#addEditModal').modal('hide');
                             $('.productForm')[0].reset();
                             toastr.success(res.message);
-                            teamView(); // Refresh the table data
+                            productView(); // Refresh the table data
                         } 
                     },
                     error: function(err) {
@@ -263,9 +259,6 @@ tagify.on('add', function(e) {
                             var errors = err.responseJSON.errors;
                             if (errors.name) {
                                 showError('#name', errors.name);
-                            }
-                            if (errors.position) {
-                                showError('#position', errors.position);
                             }
                             // Handle other validation errors similarly
                         } else {
@@ -283,16 +276,16 @@ tagify.on('add', function(e) {
                 let id = $('#product_id').val();
 
                 if (id) {
-                    handleFormSubmission(`/backend/team/update/${id}`, 'POST', formData);
+                    handleFormSubmission(`/backend/product/update/${id}`, 'POST', formData);
                 } else {
-                    handleFormSubmission('{{ route("backend.team.add") }}', 'POST', formData);
+                    handleFormSubmission('{{ route("backend.product.add") }}', 'POST', formData);
                 }
             });
 
             // Function to refresh the team data table
-            function teamView() {
+            function productView() {
                 $.ajax({
-                    url: '{{ route("backend.team.data") }}',
+                    url: '{{ route("backend.product.data") }}',
                     method: 'GET',
                     success: function(res) {
                         if (res.status == 200) {
@@ -305,7 +298,7 @@ tagify.on('add', function(e) {
                                         <tr>
                                             <td>${index + 1}</td>
                                             
-                                            <td>${team.image ? `<img src="/uploads/team/${team.image}" alt="Team Image" width="50">` : 'photo not found'}</td>
+                                            <td>${team.image ? `<img src="/uploads/product/${team.image}" alt="Team Image" width="50">` : 'photo not found'}</td>
                                             <td>${team.name ?? ""}</td>
                                             <td>${team.position ?? ""}</td>
                                             <td>
@@ -342,7 +335,7 @@ tagify.on('add', function(e) {
             }
 
             // Initial load of team data
-            teamView();
+            productView();
 
             // Event listener for add new button
             // $('#addNewButton').click(function() {
@@ -410,7 +403,7 @@ tagify.on('add', function(e) {
                                 // console.log(res);
                                 if (res.status == 200) {
                                     toastr.success(res.message);
-                                    teamView();
+                                    productView();
                                 } else {
                                     toastr.warning(res.message);
                                     toastr.warning(res.message);

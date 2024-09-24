@@ -3,19 +3,38 @@
 
 
 
-    <div class="container">
-
-    <section class="scroll-section" id="bootstrapServerSide">
+<div class="container">
+    <!-- Title and Top Buttons Start -->
+    <div class="page-title-container">
+        <div class="row">
+            <!-- Title Start -->
+            <div class="col-12 col-md-7">
+                <h1 class="mb-0 pb-0 display-4" id="title">Product Category List</h1>
+                <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
+                    <ul class="breadcrumb pt-0">
+                        <li class="breadcrumb-item"><a href="Dashboards.Default.html">Home</a></li>
+                        <li class="breadcrumb-item"><a href="Interface.html">Interface</a></li>
+                        <li class="breadcrumb-item"><a href="Interface.Plugins.html">Plugins</a></li>
+                        <li class="breadcrumb-item"><a href="Interface.Plugins.Datatables.html">Datatables</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- Title End -->
+        </div>
+    </div>
+    <!-- Title and Top Buttons End -->
+    <section class="scroll-section my-5" id="bootstrapServerSide">
         <h2 class="small-title">Add Product Category</h2>
         <div class="card">
             <div class="card-body">
                 <form id="signupForm" class="data_category row"
                     enctype="multipart/form-data" class="row g-3">
-                    <div class="col-12">
+                    <div class="col-12 pb-5">
                         <label for="validationServer01" class="form-label">Category name</label>
                         <input type="text" name="categoryName" onkeyup="errorRemove(this);" onblur="errorRemove(this);" class="form-control cat_name "
-                            id="validationServer01" value="" >
-                            <!-- <span class="text-danger cat_name_error">this is a not valid </span> -->
+                            id="validationServer01" value="">
+                        <!-- <span class="text-danger cat_name_error">this is a not valid </span> -->
                         <div class="valid-feedback error_msg">Looks good!</div>
                         <div id="validationServer01Feedback" class="invalid-feedback cat_name_error">Please provide a valid Name.
                         </div>
@@ -33,14 +52,17 @@
             </div>
         </div>
     </section>
-<!-- category Table -->
-            <table class="table table-striped">
+    <!-- category Table -->
+    <div class="row">
+        <h2 class="small-title text-center">Product Category list</h2>
+        <div class="col">
+            <table class="table table-striped mt-3">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Image</th>
                         <th>Name</th>
-                        <th>Position</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -48,110 +70,86 @@
                     <!-- Data will be inserted here by AJAX -->
                 </tbody>
             </table>
-        @if ($product_categories->count() > 0)
-        {{-- @dd($categories); --}}
-        {{-- @dd($category) --}}
-            <table>
-                <thead>
-                    </tr>
-                        <th>SL No</th>
-                        <th>category Name</th>
-                        <th>slug</th>
-                        <th>image</th>
-                        <th>status</th>
-                        <th>created_at</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    @foreach ($product_categories as $key => $category)
-                        <tr>
-                            <td>{{ $key + 1 }}</td>
-                            <td>{{ $category->categoryName }}</td>
-                            <td>{{ $category->slug }}</td>
-                            <td>{{ $category->image }}</td>
-                            <td>{{ $category->status }}</td>
-                            <td>{{ $category->created_at }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-        
+        </div>
     </div>
 
-    <script>
-        // error remove
-        function errorRemove(element) {
-            if (element.value != '') {
-                $(element).siblings('span').hide();
-                $(element).css('border-color', 'green');
-                // alert('d');
-                $('.error_msg').show();
-            }
+
+</div>
+
+<script>
+    // error remove
+    function errorRemove(element) {
+        if (element.value != '') {
+            $(element).siblings('span').hide();
+            $(element).css('border-color', 'green');
+            // alert('d');
+            $('.error_msg').show();
         }
-        $(document).ready(function() {
-            // show error
-            function showError(name, message) {
-                // alert('hello');
-                $(name).css('border-color', 'red'); // Highlight input with red border
-                $(name).focus(); // Set focus to the input field
-                $(`${name}_error`).show().text(message); // Show error message
-            }
-            // save category
-            const savecat = document.querySelector('.save_button');
-            savecat.addEventListener('click', function(e) {
-                
-                e.preventDefault();
-                let formData = new FormData($('.data_category')[0]);
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    
-                    url: 'category/store',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(res) {
-                        if (res.status == 200) {
-                            $('.data_category')[0].reset();
-                            catView();
-                            toastr.success(res.message);
-                        } else {
-                            
-                            console.log(res);
-                            if (res.error.categoryName) {
-                                showError('.cat_name', res.error.categoryName);
-                            }
+    }
+    $(document).ready(function() {
+        // show error
+        function showError(name, message) {
+            // alert('hello');
+            $(name).css('border-color', 'red'); // Highlight input with red border
+            $(name).focus(); // Set focus to the input field
+            $(`${name}_error`).show().text(message); // Show error message
+        }
+        // save category
+        const savecat = document.querySelector('.save_button');
+        savecat.addEventListener('click', function(e) {
+
+            e.preventDefault();
+            let formData = new FormData($('.data_category')[0]);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+
+                url: 'category/store',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    if (res.status == 200) {
+                        $('.data_category')[0].reset();
+                        catView();
+                        toastr.success(res.message);
+                    } else {
+
+                        console.log(res);
+                        if (res.error.categoryName) {
+                            showError('.cat_name', res.error.categoryName);
                         }
                     }
-                });
-            })
+                }
+            });
+        })
 
-            function catView() {
-                $.ajax({
-                    url: '{{ route("product.category.view") }}',
-                    method: 'GET',
-                    success: function(res) {
-                        console.log(res);
-                        if (res.status == 200) {
-                            const categories = res.data;
-                            // console.log(res.data);
-                            $('.showData').empty();
-                            if (categories.length > 0) {
-                                $.each(categories, function(index, category) {
-                                    // console.log(category.image);
-                                    const tr = `
+        function catView() {
+            $.ajax({
+                url: '{{ route("product.category.view") }}',
+                method: 'GET',
+                success: function(res) {
+                    // console.log(res);
+                    if (res.status == 200) {
+                        const categories = res.data;
+                        console.log(res.data);
+                        $('.showData').empty();
+                        if (categories.length > 0) {
+                            $.each(categories, function(index, category) {
+                                // console.log(category.image);
+                                const tr = `
                                         <tr>
                                             <td>${index + 1}</td>
                                             
                                             <td>${category.image ? `<img src="/uploads/store/product/categoryImage/${category.image}" alt="category Image" width="50">` : 'photo not found'}</td>
                                             <td>${category.categoryName ?? ""}</td>
-                                            <td>${category.status ?? ""}</td>
+                                            <td>
+                                                <button id="catStatusBtn${category.id}" class="catStatusBtn badge text-uppercase ${category.status != 0 ? 'bg-danger' : 'bg-success' } categoryButton" data-id="${category.id}">${category.status != 0 ? 'Inactive' : 'Active'}</button>
+                                            </td>
                                             <td>
                                                 <a href="#" class="btn btn-outline-primary btn-icon category_edit" data-id="${category.id}" data-bs-toggle="modal" data-bs-target="#addEditModal">
                                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -162,31 +160,65 @@
                                                 </a>
                                             </td>
                                         </tr>`;
-                                    $('.showData').append(tr);
-                                });
-                            } else {
-                                $('.showData').html(`
+                                $('.showData').append(tr);
+                            });
+                        } else {
+                            $('.showData').html(`
                                     <tr>
                                         <td colspan="6" class="text-center text-warning mb-2">Data Not Found</td>
                                         <td class="text-center">
                                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEditModal">Add category Info <i data-feather="plus"></i></button>
                                         </td>
                                     </tr>`);
+                        }
+                    } else {
+                        console.error("Failed to fetch category data:", res.message);
+                        toastr.warning(res.message);
+                    }
+                },
+                error: function(err) {
+                    console.error("Error in fetching category data:", err);
+                    toastr.error("An unexpected error occurred.");
+                }
+            });
+        }
+        // Initial load of category data
+        catView();
+
+        $('.showData').on('click', '.catStatusBtn', function() {
+            var catId = $(this).data('id');
+            // alert(catId);
+            $.ajax({
+                url: '/backend/product/category/status/' + catId,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.status == 200) {
+                        // var button = $('#categoryButton_' + categoryId);
+                        if (response.status == 200) {
+                            var button = $('#catStatusBtn' +
+                                catId);
+                            if (response.newStatus == 1) {
+                                button.removeClass('bg-success').addClass(
+                                    'bg-danger').text('Inactive');
+                            } else {
+                                button.removeClass('bg-danger').addClass(
+                                    'bg-success').text('Active');
+
+
                             }
                         } else {
-                            console.error("Failed to fetch category data:", res.message);
-                            toastr.warning(res.message);
+                            button.removeClass('bg-success').addClass(
+                                'bg-danger').text(
+                                'Inactive');
                         }
-                    },
-                    error: function(err) {
-                        console.error("Error in fetching category data:", err);
-                        toastr.error("An unexpected error occurred.");
                     }
-                });
-            }
-
-            // Initial load of category data
-            catView();
+                }
+            });
         });
-    </script>
+
+    });
+</script>
 @endsection
