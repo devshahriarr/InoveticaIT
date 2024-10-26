@@ -84,6 +84,13 @@
 
 <script>
 
+    // Function to show ajax validation error
+    function showError(name, message) {
+        $(name).addClass('is-invalid');
+        $(name).focus();
+        $(`${name}_error`).show().text(message);
+    }
+
     function validateForm() {
         let isValid = true;
 
@@ -130,12 +137,7 @@
 
     $(document).ready(function() {
         
-        // Function to show ajax validation error
-        function showError(name, message) {
-            $(name).addClass('is-invalid');
-            $(name).focus();
-            $(`${name}_error`).show().text(message);
-        }
+
 
         // Function to handle form submission
         function handleFormSubmission(url, type, formData) {

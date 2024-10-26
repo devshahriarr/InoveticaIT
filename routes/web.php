@@ -71,7 +71,9 @@ Route::prefix('backend/product')->group(function () {
         Route::get('/', 'allProducts')->name('backend.product.data');
         Route::post('/store', 'store')->name('backend.product.add');
         Route::get('/list/view', 'show')->name('backend.product.list');
-        // Route::get('/category/edit/{id}', 'edit')->name('category.edit');
+        
+        Route::post('/status/{prId}', 'changeStatus')->name('backend.product.category.status');
+        Route::get('/edit/{id}', 'edit')->name('backend.product.edit');
         // Route::post('/category/update/{id}', 'update')->name('category.update');
         // Route::get('/category/delete/{id}', 'delete')->name('category.delete');
     });

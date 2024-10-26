@@ -263,7 +263,6 @@
                                         
                                         <td>${cat.image ? `<img src="/uploads/service/category/${cat.image}" alt="cat Image" width="50">` : 'photo not found'}</td>
                                         <td>${cat.categoryName ?? ""}</td>
-                                        <td>${cat.status ?? ""}</td>
                                         <td>
                                             <button id="catStatusBtn${cat.id}" class="catStatusBtn badge text-uppercase ${cat.status != 0 ? 'bg-success' : 'bg-danger' } categoryButton" data-id="${cat.id}">${cat.status != 0 ? 'Active' : 'Inactive'}</button>
                                         </td>
