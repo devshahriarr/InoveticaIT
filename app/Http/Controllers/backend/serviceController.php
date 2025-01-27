@@ -7,7 +7,7 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class serviceController extends Controller
+class ServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,9 @@ class serviceController extends Controller
     public function index()
     {
         $services = Service::all();
-        return view('backend.body.service.service', compact('services'));
+        // dd($services);
+        return response()->json($services, 200);
+        // return view('backend.body.service.service', compact('services'));
     }
 
     /**

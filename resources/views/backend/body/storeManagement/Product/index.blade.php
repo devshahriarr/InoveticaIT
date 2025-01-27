@@ -35,6 +35,7 @@
                     <form id="productAddForm"
                         enctype="multipart/form-data" class="productForm row g-3">
                         @csrf
+                        <input type="text" id="product_id" name="id">
                         <div class="col-12 col-sm-6 col-md-6 col-xl-4">
                             <label for="" class="form-label">Product name</label>
                             <input type="text" name="name" class="form-control"
@@ -65,7 +66,7 @@
                         <div class="col-12 col-sm-6 col-md-6 col-xl-4">
                             <label class="form-label">Product Image</label>
                             <div class="input-group mb-3">
-                                <input type="file" name="img" class="form-control" id="inputGroupFile02">
+                                <input type="file" name="img" class="form-control" id="img">
                                 <label class="input-group-text" for="inputGroupFile02">Upload</label>
                             </div>
                         </div>
@@ -84,7 +85,7 @@
                         <div class="col-12 col-sm-6 col-md-6">
                             <label for="" class="form-label">Product URL</label>
                             <input type="text" name="pr_link" class="form-control"
-                                id="" value="" required="">
+                                id="pr_link" value="" required="">
                             <span id="pr_link_error" class="text-danger"></span>
                         </div>
                         <div class="col-12">
@@ -93,7 +94,7 @@
                             <span id="pr_tags_error" class="text-danger"></span>
                         </div>
                         <div class="col-12">
-                            <button class="btn btn-primary save_product" type="submit">Submit form</button>
+                            <button id="save_product" class="btn btn-primary save_product" type="submit">Submit form</button>
                         </div>
                     </form>
                 </div>
@@ -106,7 +107,9 @@
                         <th>#</th>
                         <th>Image</th>
                         <th>Name</th>
-                        <th>Position</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -241,9 +244,9 @@
 
         // Function to handle form submission
         function handleFormSubmission(url, type, formData) {
-            // if (!validateForm()) {
-            //     return; // If the form is invalid, do not proceed with the AJAX request
-            // }
+            if (!validateForm()) {
+                return; // If the form is invalid, do not proceed with the AJAX request
+            }
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -330,8 +333,8 @@
                                         
                                         <td>${product_data.image ? `<img src="/uploads/product/${product_data.image}" alt="product_data Image" width="50">` : 'photo not found'}</td>
                                         <td>${product_data.product_name ?? ""}</td>
+                                        <td>${product_data.product_cat_id ?? ""}</td>
                                         <td>${product_data.product_price ?? ""}</td>
-                                        <td>${product_data.status ?? ""}</td>
                                         <td>
                                             <button id="product_status${product_data.id}" class="product_status badge text-uppercase ${product_data.status != 0 ? 'bg-success' : 'bg-danger' } categoryButton" data-id="${product_data.id}">${product_data.status != 0 ? 'Active' : 'Inactive'}</button>
                                         </td>
@@ -394,24 +397,28 @@
                     if (data.status === 200) {
                         // alert("hello world");
                         const product_data = data.data;
-                        $('#modalTitle').text('Edit Team Member');
+                        // $('#modalTitle').text('Edit Team Member');
                         $('#product_id').val(product_data.id);
-                        $('#name').val(product_data.name);
-                        $('#position').val(product_data.position);
-                        $('#showEditImage').attr('src', product_data.photo_url ? `/uploads/product_data/${product_data.photo_url}` : '');
-                        $('#addEditConfirmButton').text('Update');
+                        $('#name').val(product_data.product_name);
+                        $('#select2Basic').val(product_data.product_cat_id);
+                        $('#quillEditor').val(product_data.product_desc);
+                        $('#img').attr('src', product_data.product_img ? `/uploads/product_data/${product_data.product_img}` : '');
+                        $('#price').val(product_data.product_price);
+                        $('#pr_link').val(product_data.product_link);
+                        $('#pr_tags').val(product_data.product_tags);
+                        $('#save_product').text('Update');
                     } else {
                         toastr.warning(res.message);
                     }
                 },
                 error: function(err) {
-                    console.error("Error in fetching product data data:", err);
+                    console.error("Error in fetching product data:", err);
                     toastr.error("An unexpected error occurred.");
                 }
             });
         });
         // Event listener for delete button
-        $(document).on('click', '.product_delete', function(e) {
+        $(document).on('click', '.product_data_delete', function(e) {
             e.preventDefault();
             let id = this.getAttribute('data-id');
             // alert(id);
@@ -431,7 +438,7 @@
                         }
                     });
                     $.ajax({
-                        url: `/backend/team/destroy/${id}`,
+                        url: `/backend/product/destroy/${id}`,
                         type: 'GET',
                         success: function(res) {
                             // console.log(res);

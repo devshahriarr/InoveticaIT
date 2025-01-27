@@ -115,7 +115,13 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button class="dropdown-item"><i
+                                    class='bx bx-log-out-circle'></i><span>Logout</span>
+                                </button>
+                            </form>
+                                <a href="{{ route('logout') }}">
                                     <i data-acorn-icon="logout" class="me-2" data-acorn-size="17"></i>
                                     <span class="align-middle">Logout</span>
                                 </a>

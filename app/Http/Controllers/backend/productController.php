@@ -8,7 +8,7 @@ use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
-class productController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -95,7 +95,7 @@ class productController extends Controller
         $file = $request->file('categoryImage');
         $extension = $file->getClientOriginalExtension();
         $imageName = time() . '.' . $extension;
-        $file->move(public_path('uploads/service/category'), $imageName);
+        $file->move(public_path('uploads/products'), $imageName);
 
         return $imageName;
     }
@@ -104,7 +104,7 @@ class productController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
         //
     }
@@ -112,10 +112,11 @@ class productController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
         try {
             $products = Product::findOrFail($id);
+            // dd($products);
             return response()->json([
                 'status' => 200,
                 'data' => $products
@@ -123,7 +124,7 @@ class productController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 500,
-                'message' => 'Failed to retrieve team data'
+                'message' => 'Failed to retrieve Product data'
             ]);
         }
     }
@@ -131,17 +132,90 @@ class productController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // dd($request);
+        
+        // $products = Product::findOrFail($request->id);
+        // $products->product_name = $request->name;
+        // $products->product_cat_id = $request->product_category;
+        // $products->product_price = $request->price;
+        // $products->product_link = $request->pr_link;
+        // $products->product_tags = $request->pr_tags;
+        // if ($request->hasFile('image')) {
+        //     $file = $request->file('image');
+        //     $filename = time() . '.' . $file->getClientOriginalExtension();
+        //     $file->move(public_path('uploads/product'), $filename);
+        //     $products->image = $filename;
+        // }
+        // $products->save();
+
+        // return response()->json([
+        //     'status' => 200,
+        //     'success' => 'Team member updated successfully.'
+        // ]);
+        
+        try {
+            $products = Product::findOrFail($id);
+
+            $products->product_name = $request->name;
+            $products->product_cat_id = $request->product_category;
+            $products->product_price = $request->price;
+            $products->product_link = $request->pr_link;
+            $products->product_tags = $request->pr_tags;
+
+            if ($request->hasFile('image')) {
+                $products->image = $this->handleImageUpload($request, $products->image);
+            }
+
+            $products->save();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Product updated successfully.',
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team Member not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'An unexpected error occurred.dddddd',
+            ], 500);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
-        //
+        try {
+            $products = Product::findOrFail($id);
+
+            if ($products->image) {
+                $this->deleteImage($products->image);
+            }
+
+            $products->delete();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Team Member Deleted Successfully',
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Team Member not found.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'An unexpected error occurred.',
+            ], 500);
+        }
     }
     public function changeStatus($prId){
 
@@ -158,5 +232,16 @@ class productController extends Controller
             'message' => 'Status Changed Successfully',
         ]);
         
+    }
+
+    private function deleteImage($imageName)
+    {
+        $imagePath = public_path('uploads/products/') . $imageName;
+
+        if (file_exists($imagePath)) {
+            if (!unlink($imagePath)) {
+                \Log::error('Failed to delete image: ' . $imagePath);
+            }
+        }
     }
 }

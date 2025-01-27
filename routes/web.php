@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\backend\serviceController;
+use App\Http\Controllers\backend\ServiceController;
 use App\Http\Controllers\backend\ServiceCategoryController;
 use App\Http\Controllers\backend\productCategoryController;
 use App\Http\Controllers\backend\productController;
@@ -37,7 +37,7 @@ Route::prefix('backend/services')->group(function () {
         Route::get('/category/delete/{id}', 'destroy')->name('category.delete');
         Route::post('/category/status/{catId}', 'changeStatus')->name('backend.service.category.status');
     });
-    Route::controller(serviceController::class)->group(function () {
+    Route::controller(ServiceController::class)->group(function () {
         Route::get('/', 'index')->name('backend.services');
         Route::post('/store', 'store')->name('backend.service.store');
         // Route::get('/category/view', 'show')->name('category.view');
@@ -74,8 +74,8 @@ Route::prefix('backend/product')->group(function () {
         
         Route::post('/status/{prId}', 'changeStatus')->name('backend.product.category.status');
         Route::get('/edit/{id}', 'edit')->name('backend.product.edit');
-        // Route::post('/category/update/{id}', 'update')->name('category.update');
-        // Route::get('/category/delete/{id}', 'delete')->name('category.delete');
+        Route::post('/update/{id}', 'update')->name('backend.product.update');
+        Route::get('/destroy/{id}', 'delete')->name('product.delete');
     });
 });
 
