@@ -68,6 +68,21 @@ class ServiceCategoryController extends Controller
             ], 500);
         }
     }
+    public function find($id)
+    {
+        try {
+            $categories = ServiceCategory::findOrFail($id);
+            return response()->json([
+                'status' => 200,
+                'data' => $categories,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'An unexpected error occurred.',
+            ], 500);
+        }
+    }
 
     /**
      * Show the form for editing the specified resource.

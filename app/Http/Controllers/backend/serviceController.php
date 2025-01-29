@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+// use Log;
+// use Log;
 
 class ServiceController extends Controller
 {
@@ -19,7 +22,33 @@ class ServiceController extends Controller
         return response()->json($services, 200);
         // return view('backend.body.service.service', compact('services'));
     }
+    public function find($id)
+    {
+        // dd($id);
+        
+        try {
+            $service = Service::find($id);
+            if (!$service) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Service not found!',
+                ], 404);
+            }
+    
+            return response()->json([
+                'status' => 200,
+                'data' => $service,
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error fetching service: " . $e->getMessage());
 
+            return response()->json([
+                'status' => 500,
+                'message' => 'An unexpected error occurred.',
+                'error' => $e->getMessage(), // Only for debugging
+            ], 500);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      */
