@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Gallary;
+use App\Models\Portfolio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class GallaryController extends Controller
+class PortfolioController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('backend.page.galary');
+        return view('backend.pages.portfolio.index');
     }
 
     /**
@@ -27,18 +27,19 @@ class GallaryController extends Controller
             'name' => 'required|max:255',
         ]);
         if ($validator->passes()) {
-            $gallery = new Gallary;
+            $portfolio = new Portfolio;
             if ($request->image) {
                 $imageName = rand() . '.' . $request->image->extension();
-                $request->image->move(public_path('uploads/galary/'), $imageName);
-                $gallery->url = $imageName;
+                $request->image->move(public_path('uploads/portfolio/'), $imageName);
+                $portfolio->image_url = $imageName;
             }
-            $gallery->title =  $request->name;
-            $gallery->description = $request->description;
-            $gallery->save();
+            $portfolio->title =  $request->name;
+            $portfolio->url = $request->url;
+            $portfolio->description = $request->description;
+            $portfolio->save();
             return response()->json([
                 'status' => 200,
-                'message' => 'Gallery Save Successfully',
+                'message' => 'portfolio Save Successfully',
             ]);
         } else {
             return response()->json([
@@ -51,12 +52,12 @@ class GallaryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function view()
+    public function getData()
     {
-        $galary = Gallary::get();
+        $portfolio = Portfolio::get();
         return response()->json([
             "status" => 200,
-            "data" => $galary
+            "data" => $portfolio
         ]);
     }
 
@@ -65,11 +66,11 @@ class GallaryController extends Controller
      */
     public function edit($id)
     {
-        $galary = Gallary::findOrFail($id);
-        if ($galary) {
+        $portfolio = Portfolio::findOrFail($id);
+        if ($portfolio) {
             return response()->json([
                 'status' => 200,
-                'galary' => $galary
+                'portfolio' => $portfolio
             ]);
         } else {
             return response()->json([
@@ -88,24 +89,25 @@ class GallaryController extends Controller
             'name' => 'required|max:255',
         ]);
         if ($validator->passes()) {
-            $gallery = Gallary::findOrFail($id);
+            $portfolio = Portfolio::findOrFail($id);
             if ($request->image) {
                 $imageName = rand() . '.' . $request->image->extension();
-                $request->image->move(public_path('uploads/galary/'), $imageName);
-                if ($gallery->url) {
-                    $previousImagePath = public_path('uploads/galary/') . $gallery->url;
+                $request->image->move(public_path('uploads/portfolio/'), $imageName);
+                if ($portfolio->image_url) {
+                    $previousImagePath = public_path('uploads/portfolio/') . $portfolio->image_url;
                     if (file_exists($previousImagePath)) {
                         unlink($previousImagePath);
                     }
                 }
-                $gallery->url = $imageName;
+                $portfolio->image_url = $imageName;
             }
-            $gallery->title =  $request->name;
-            $gallery->description = $request->description;
-            $gallery->save();
+            $portfolio->title       = $request->name;
+            $portfolio->url         = $request->url;
+            $portfolio->description = $request->description;
+            $portfolio->save();
             return response()->json([
                 'status' => 200,
-                'message' => 'Gallery Update Successfully',
+                'message' => 'portfolio Update Successfully',
             ]);
         } else {
             return response()->json([
@@ -120,23 +122,23 @@ class GallaryController extends Controller
      */
     public function destroy(string $id)
     {
-        $gallery = Gallary::findOrFail($id);
-        if ($gallery->url) {
-            $previousImagePath = public_path('uploads/galary/') . $gallery->url;
+        $portfolio = Portfolio::findOrFail($id);
+        if ($portfolio->url) {
+            $previousImagePath = public_path('uploads/portfolio/') . $portfolio->url;
             if (file_exists($previousImagePath)) {
                 unlink($previousImagePath);
             }
         }
-        $gallery->delete();
+        $portfolio->delete();
         return response()->json([
             'status' => 200,
-            'message' => 'Gallery Deleted Successfully',
+            'message' => 'portfolio Deleted Successfully',
         ]);
     }
 
     public function viewAll()
     {
-        $images = Gallary::all(); 
+        $images = Portfolio::all(); 
 
         if ($images->count() > 0) {
             return view('frontend.gallary', compact('images'));
@@ -144,7 +146,7 @@ class GallaryController extends Controller
 
         return response()->json([
             'status' => 200,
-            'message' => 'Gallery Image Not Found',
+            'message' => 'portfolio Image Not Found',
         ]);
     }
 }
