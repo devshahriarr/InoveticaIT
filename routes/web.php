@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+Route::prefix('backend/portfolio')->group(function () {
+    Route::controller(PortfolioController::class)->group(function () {
+        Route::get('/', 'index')->name('backend.portfolio');
+        Route::post('/add', 'store')->name('backend.portfolio.add');
+        Route::get('/data', 'getData')->name('backend.portfolio.data');
+        Route::get('/edit/{id}', 'edit')->name('portfolio.edit');
+        Route::post('/update/{id}', 'update')->name('portfolio.update');
+        Route::get('/destroy/{id}', 'destroy')->name('portfolio.destroy');
+    });
+});
 
 Route::get('/', function () {
     return view('backend.dashboard');
@@ -92,16 +102,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::prefix('backend/portfolio')->group(function () {
-    Route::controller(PortfolioController::class)->group(function () {
-        Route::get('/', 'index')->name('backend.portfolio');
-        Route::post('/add', 'store')->name('backend.portfolio.add');
-        Route::get('/data', 'getData')->name('backend.portfolio.data');
-        Route::get('/edit/{id}', 'edit')->name('portfolio.edit');
-        Route::post('/update/{id}', 'update')->name('portfolio.update');
-        Route::get('/destroy/{id}', 'destroy')->name('portfolio.destroy');
-    });
-});
+
 // Route::prefix('services')->group(function () {
 //     Route::get('/category', [ServiceController::class, 'index'])->name(''); // Show all services
 //     Route::get('/', [ServiceController::class, 'index'])->name('services.index'); // Show all services
