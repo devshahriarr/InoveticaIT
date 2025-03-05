@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\backend\PortfolioCategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\backend\ServiceController;
 use App\Http\Controllers\backend\ServiceCategoryController;
@@ -21,6 +22,16 @@ Route::prefix('backend/portfolio')->group(function () {
         Route::get('/edit/{id}', 'edit')->name('portfolio.edit');
         Route::post('/update/{id}', 'update')->name('portfolio.update');
         Route::get('/destroy/{id}', 'destroy')->name('portfolio.destroy');
+    });
+    Route::prefix('category')->group(function () {
+        Route::controller(PortfolioCategoryController::class)->group(function () {
+            Route::get('/', 'index')->name('backend.portfolio.category');
+            Route::post('/add', 'store')->name('backend.portfolio.category.add');
+            Route::get('/data', 'getData')->name('backend.portfolio.category.data');
+            Route::get('/edit/{id}', 'edit')->name('portfolio.category.edit');
+            Route::post('/update/{id}', 'update')->name('portfolio.category.update');
+            Route::get('/destroy/{id}', 'destroy')->name('portfolio.category.destroy');
+        });
     });
 });
 

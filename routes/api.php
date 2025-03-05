@@ -38,7 +38,7 @@ Route::prefix('products')->group(function () {
 });
 Route::prefix('/portfolio')->group(function () {
     Route::controller(PortfolioController::class)->group(function () {
-        Route::get('/', 'view')->name('portfolio');
+        Route::get('/', 'getData')->name('portfolio');
         Route::post('/add', 'store')->name('portfolio.add');
         Route::get('/data', 'getData')->name('portfolio.data');
         // Route::get('/edit/{id}', 'edit')->name('portfolio.edit');
