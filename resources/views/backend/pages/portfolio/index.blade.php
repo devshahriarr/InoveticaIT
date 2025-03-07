@@ -53,7 +53,7 @@
                             <label class="input-group-text" for="inputGroupFile02">Upload</label>
                         </div>
                         <span id="image_error" class="text-danger"></span>
-                        <img id="showEditImage" src="" alt="" width="50">
+                        <img id="showEditImage" src="" alt="" width="150">
                     </div>
                     <div class="form-floating mb-3">
                         <textarea id="description" class="form-control" placeholder="Add Portfolio Description Here" rows="3" name="description"></textarea>
@@ -65,25 +65,25 @@
         </div>
     </section>
     <section class="scroll-section" id="floatingLabel">
-        <h2 class="small-title">Add Portfolio</h2>
+        <h2 class="small-title">Portfolio list</h2>
         <div class="card mb-5">
             <div class="card-body">
                 <!-- Team Table -->
                 <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Image</th>
-                        <th>Name</th>
-                        <th>Link</th>
-                        <th>Description</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="showData">
-                    <!-- Data will be inserted here by AJAX -->
-                </tbody>
-            </table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Link</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="showData">
+                        <!-- Data will be inserted here by AJAX -->
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -108,6 +108,7 @@
         let name = $('#name').val().trim();
         let url = $('#url').val().trim();
         let image = $('#image').val();
+        let portfolioId = $('#portfolioId').val();
 
         // Validate name
         if (name === '') {
@@ -120,23 +121,25 @@
 
         // Validate position
         if (url === '') {
-            showError('#url', 'url is required.');
+            showError('#url', 'Url is required.');
             isValid = false;
         } else if (url.length > 100) {
             showError('#url', 'url cannot be longer than 100 characters.');
             isValid = false;
         }
 
-        // Validate image (if needed)
-        if (image == '') {
-            showError('#image', 'Image is required.');
-            isValid = false;
-        } else if (image) {
-            let fileExtension = image.split('.').pop().toLowerCase();
-            let validExtensions = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
-            if (!validExtensions.includes(fileExtension)) {
-                showError('#image', 'Invalid image format. Allowed formats: jpeg, jpg, png, gif, webp.');
+        // Validate image only if adding a new portfolio (not updating)
+        if (!portfolioId) { // If portfolioId is empty, it means we're adding
+            if (image === '') {
+                showError('#image', 'Image is required.');
                 isValid = false;
+            } else {
+                let fileExtension = image.split('.').pop().toLowerCase();
+                let validExtensions = ['jpeg', 'jpg', 'png', 'gif', 'webp'];
+                if (!validExtensions.includes(fileExtension)) {
+                    showError('#image', 'Invalid image format. Allowed formats: jpeg, jpg, png, gif, webp.');
+                    isValid = false;
+                }
             }
         }
 
@@ -167,6 +170,7 @@
                 success: function(res) {
                     if (res.status == 200) {
                         $('.portfolioform')[0].reset();
+                        $('#showEditImage').attr('src', '');
                         toastr.success(res.message);
                         portfolioView(); // Refresh the table data
                     }
@@ -283,7 +287,12 @@
                         // $('#url').val(portfolio.image_url);
                         $('#url').val(portfolio.url);
                         $('#description').val(portfolio.description);
-                        $('#showEditImage').attr('src', portfolio.image_url ? `/uploads/portfolio/${portfolio.image_url}` : '');
+                        $('#showEditImage').attr('src', portfolio.image_url ? `/uploads/portfolio/${portfolio.image_url}` : '')
+                            .css({
+                                "border-radius": "5px",
+                                "margin-top": "10px",
+                                "box-shadow": "0px 2px 5px rgba(0,0,0,0.2)"
+                            });;
                         $('#addEditConfirmButton').text('Update');
                     } else {
                         toastr.warning(res.message);

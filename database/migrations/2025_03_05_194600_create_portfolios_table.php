@@ -17,6 +17,12 @@ return new class extends Migration
             $table->string('url'); // URL of the portfolio
             $table->string('image_url'); // URL or path to the photo
             $table->text('description')->nullable();
+            
+            $table->unsignedBigInteger('portfolio_cat_id');
+            $table->foreign('portfolio_cat_id')
+            ->references('id')
+            ->on('portfolio_categories')
+            ->onDelete('cascade');
             $table->timestamps();
         });
     }

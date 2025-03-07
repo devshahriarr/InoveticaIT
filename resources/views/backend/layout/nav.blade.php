@@ -361,8 +361,13 @@
                             </a>
                             <ul id="portfolio">
                                 <li>
+                                    <a href="{{ route('backend.portfolio.category') }}">
+                                        <span class="label">Category</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="{{ route('backend.portfolio') }}">
-                                        <span class="label">Home</span>
+                                        <span class="label">All Portfolio</span>
                                     </a>
                                 </li>
                                 <li>
