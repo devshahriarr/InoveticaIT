@@ -11,13 +11,13 @@
                 <div class="row">
                     <!-- Title Start -->
                     <div class="col-12 col-md-7">
-                        <h1 class="mb-0 pb-0 display-4" id="title">Service Category List</h1>
+                        <h1 class="mb-0 pb-0 display-4" id="title">Blog Category List</h1>
                         <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
                             <ul class="breadcrumb pt-0">
                                 <li class="breadcrumb-item"><a href="Dashboards.Default.html">Home</a></li>
-                                <li class="breadcrumb-item"><a href="Interface.html">Interface</a></li>
-                                <li class="breadcrumb-item"><a href="Interface.Plugins.html">Plugins</a></li>
-                                <li class="breadcrumb-item"><a href="Interface.Plugins.Datatables.html">Datatables</a>
+                                <li class="breadcrumb-item"><a href="Interface.html">Blogs</a></li>
+                                <li class="breadcrumb-item"><a href="Interface.Plugins.html">Category</a></li>
+                                <li class="breadcrumb-item"><a href="Interface.Plugins.Datatables.html">list</a>
                                 </li>
                             </ul>
                         </nav>
@@ -76,12 +76,12 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modalTitle">Add New</h5>
+                            <h5 class="modal-title" id="modalTitle">Add New blog</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form class="serviceCatForm" enctype="multipart/form-data">
+                            <form class="BlogsCatForm" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" id="catId" name="id">
                                 <div class="mb-3">
@@ -100,7 +100,7 @@
                                     <!-- <img id="showEditImage" src="" alt="" width="50"> -->
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <textarea id="description" class="form-control" placeholder="Add Service Category Description Here" rows="3" name="description"></textarea>
+                                    <textarea id="description" class="form-control" placeholder="Add blogs Category Description Here" rows="3" name="description"></textarea>
                                     <label>Description</label>
                                 </div>
 
@@ -109,14 +109,14 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-primary"
                                 data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-primary save_service_cat" id="addEditConfirmButton">Add</button>
+                            <button type="button" class="btn btn-primary save_blogs_cat" id="addEditConfirmButton">Add</button>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Add Edit Modal End -->
 
-            <!-- Service Category Table Start-->
+            <!-- blogs Category Table Start-->
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -131,7 +131,7 @@
                     <!-- Data will be inserted here by AJAX -->
                 </tbody>
             </table>
-            <!-- Service Category Table End-->
+            <!-- blogs Category Table End-->
         </div>
     </div>
 </div>
@@ -202,9 +202,9 @@
                 success: function(res) {
                     if (res.status == 200) {
                         $('#addEditModal').modal('hide');
-                        $('.serviceCatForm')[0].reset();
+                        $('.BlogsCatForm')[0].reset();
                         toastr.success(res.message);
-                        serviceCatView(); // Refresh the table data
+                        blogCatView(); // Refresh the table data
                     }
                     else {
                         // Handle validation errors
@@ -216,7 +216,7 @@
                     }
                 },
                 error: function(err) {
-                    // alert(err.responseJSON.errors);
+                    alert(err.responseJSON.errors);
                     if (err.status === 422) { // Validation error
                         var errors = err.responseJSON.errors;
                         if (errors.categoryName ) {
@@ -235,9 +235,9 @@
         }
 
         // Event listener for save button
-        $('.save_service_cat').on('click', function(e) {
+        $('.save_blogs_cat').on('click', function(e) {
             e.preventDefault();
-            let formData = new FormData($('.serviceCatForm')[0]);
+            let formData = new FormData($('.BlogsCatForm')[0]);
             let id = $('#catId').val();
 
             if (!validateForm()) {
@@ -245,16 +245,16 @@
             }
 
             if (id) {
-                handleFormSubmission(`/backend/services/category/update/${id}`, 'POST', formData);
+                handleFormSubmission(`/backend/blogs/category/update/${id}`, 'POST', formData);
             } else {
-                handleFormSubmission('{{ route("backend.service.category.store") }}', 'POST', formData);
+                handleFormSubmission('{{ route("backend.blogs.category.store") }}', 'POST', formData);
             }
         });
 
         // Function to refresh the team data table
-        function serviceCatView() {
+        function blogCatView() {
             $.ajax({
-                url: '{{ route("category.view") }}',
+                url: '{{ route("blogs.category.view") }}',
                 method: 'GET',
                 success: function(res) {
                     if (res.status == 200) {
@@ -266,7 +266,7 @@
                                     <tr>
                                         <td>${index + 1}</td>
 
-                                        <td>${cat.image ? `<img src="/uploads/service/category/${cat.image}" alt="cat Image" width="50">` : 'photo not found'}</td>
+                                        <td>${cat.image ? `<img src="/uploads/blogs/category/${cat.image}" alt="cat Image" width="50">` : 'photo not found'}</td>
                                         <td>${cat.categoryName ?? ""}</td>
                                         <td>
                                             <button id="catStatusBtn${cat.id}" class="catStatusBtn badge text-uppercase ${cat.status != 0 ? 'bg-success' : 'bg-danger' } categoryButton" data-id="${cat.id}">${cat.status != 0 ? 'Active' : 'Inactive'}</button>
@@ -293,19 +293,19 @@
                                 </tr>`);
                         }
                     } else {
-                        console.error("Failed to fetch Service Category data:", res.message);
+                        console.error("Failed to fetch blogs Category data:", res.message);
                         toastr.warning(res.message);
                     }
                 },
                 error: function(err) {
-                    console.error("Error in fetching Service Category data:", err);
+                    console.error("Error in fetching blogs Category data:", err);
                     toastr.error("An unexpected error occurred.");
                 }
             });
         }
 
         // Initial load of team data
-        serviceCatView();
+        blogCatView();
 
         // Event listener for add new button
         $('#addNewButton').click(function() {
@@ -322,23 +322,23 @@
             let id = $(this).data('id');
             // alert(id);
             $.ajax({
-                url: `/backend/services/category/edit/${id}`,
+                url: `/backend/blogs/category/edit/${id}`,
                 type: 'GET',
                 success: function(res) {
                     if (res.status === 200) {
                         const data = res.data;
-                        $('#modalTitle').text('Edit Service Category');
+                        $('#modalTitle').text('Edit blogs Category');
                         $('#catId').val(data.id);
                         $('#cat_name').val(data.categoryName);
                         $('#description').val(data.description);
-                        $('#cat_image').attr('src', data.image ? `/uploads/service/category/${data.image}` : '');
+                        $('#cat_image').attr('src', data.image ? `/uploads/blogs/category/${data.image}` : '');
                         $('#addEditConfirmButton').text('Update');
                     } else {
                         toastr.warning(res.message);
                     }
                 },
                 error: function(err) {
-                    console.error("Error in fetching Service Category data:", err);
+                    console.error("Error in fetching blogs Category data:", err);
                     toastr.error("An unexpected error occurred.");
                 }
             });
@@ -349,7 +349,7 @@
             let id = this.getAttribute('data-id');
             Swal.fire({
                 title: "Are you sure?",
-                text: "You won't be able to delete this Service Category!",
+                text: "You won't be able to delete this blogs Category!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
@@ -363,12 +363,12 @@
                         }
                     });
                     $.ajax({
-                        url: `/backend/services/category/delete/${id}`,
+                        url: `/backend/blogs/category/delete/${id}`,
                         type: 'GET',
                         success: function(res) {
                             if (res.status == 200) {
                                 toastr.success(res.message);
-                                serviceCatView();
+                                blogCatView();
                             } else {
                                 toastr.warning(res.message);
                                 toastr.warning(res.message);
@@ -388,7 +388,7 @@
             var catId = $(this).data('id');
             // alert(catId);
             $.ajax({
-                url: '/backend/services/category/status/' + catId,
+                url: '/backend/blogs/category/status/' + catId,
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'

@@ -227,12 +227,12 @@
                 <li>
                     <a href="#apps" data-href="Apps.html">
                         <i data-acorn-icon="screen" class="icon" data-acorn-size="18"></i>
-                        <span class="label">Apps</span>
+                        <span class="label">Blogs</span>
                     </a>
                     <ul id="apps">
                         <li>
-                            <a href="Apps.Calendar.html">
-                                <span class="label">Calendar</span>
+                            <a href="{{ route('backend.blogs.add') }}">
+                                <span class="label">Post</span>
                             </a>
                         </li>
                         <li>
@@ -470,7 +470,7 @@
                                         <span class="label">Product Subcategory</span>
                                     </a>
                                 </li>
-                                
+
                             </ul>
                         </li>
                         <li>

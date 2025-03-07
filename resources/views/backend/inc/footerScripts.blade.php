@@ -1,6 +1,8 @@
-   
+
 
    <!-- Vendor Scripts Start -->
+
+   <script src="{{ asset('assets') }}/js/vendor/jquery-3.5.1.min.js"></script>
     <script src="{{ asset('assets') }}/js/vendor/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('assets') }}/js/vendor/OverlayScrollbars.min.js"></script>
     <script src="{{ asset('assets') }}/js/vendor/autoComplete.min.js"></script>
@@ -52,6 +54,7 @@
 
     <script src="{{ asset('assets') }}/js/forms/validation.js"></script>
 
+    <script src="{{ asset('assets') }}/js/forms/controls.select2.js"></script>
     <script src="{{ asset('assets') }}/js/common.js"></script>
     <script src="{{ asset('assets') }}/js/scripts.js"></script>
 

@@ -80,7 +80,7 @@
                             <input type="number" name="price" class="form-control"
                                 id="price" value="" required="">
                             <span id="price_error" class="text-danger"></span>
-                           
+
                         </div>
                         <div class="col-12 col-sm-6 col-md-6">
                             <label for="" class="form-label">Product URL</label>
@@ -220,7 +220,7 @@
             if (!urlPattern.test(url)) {
                 showError('#pr_link', 'Please provide a valid URL.');
                 isValid = false;
-            // } 
+            // }
             // else if (!urlPattern.test(url)) {
             //     showError('#pr_link', 'Please provide a valid URL.');
             //     isValid = false;
@@ -239,8 +239,8 @@
 
 
     $(document).ready(function() {
-            
-        
+
+
 
         // Function to handle form submission
         function handleFormSubmission(url, type, formData) {
@@ -330,7 +330,7 @@
                                 const tr = `
                                     <tr>
                                         <td>${index + 1}</td>
-                                        
+
                                         <td>${product_data.image ? `<img src="/uploads/product/${product_data.image}" alt="product_data Image" width="50">` : 'photo not found'}</td>
                                         <td>${product_data.product_name ?? ""}</td>
                                         <td>${product_data.product_cat_id ?? ""}</td>
@@ -388,7 +388,7 @@
         $(document).on('click', '.product_data_edit', function(e) {
             e.preventDefault();
             let id = $(this).data('id');
-            alert(id);
+            // alert(id);
             $.ajax({
                 url: `/backend/product/edit/${id}`,
                 type: 'GET',

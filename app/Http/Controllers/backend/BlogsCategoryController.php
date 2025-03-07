@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\ServiceCategory;
+use App\Http\Requests\BlogsCatRequest;
+use App\Models\BlogsCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use App\Http\Requests\ServiceCatRequest;
 
-class ServiceCategoryController extends Controller
+class BlogsCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,18 +16,18 @@ class ServiceCategoryController extends Controller
     public function index()
     {
         // return view('backend.body.service.service_category');
-        $categories = ServiceCategory::all();
-        return view('backend.body.service.service_category', compact('categories'));
+        $categories = BlogsCategory::all();
+        return view('backend.body.blogs.blogs_category', compact('categories'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ServiceCatRequest $request)
+    public function store(BlogsCatRequest $request)
     {
-        // dd($request);
+        dd($request);
         try {
-            $category = new ServiceCategory;
+            $category = new BlogsCategory;
             $category->categoryName = $request->categoryName;
             $category->slug = Str::slug($request->categoryName);
             $category->status = 1;
@@ -41,7 +41,7 @@ class ServiceCategoryController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Service Category added successfully',
+                'message' => 'Blogs Category added successfully',
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -57,7 +57,7 @@ class ServiceCategoryController extends Controller
     public function show()
     {
         try {
-            $categories = ServiceCategory::all();
+            $categories = BlogsCategory::all();
             return response()->json([
                 'status' => 200,
                 'data' => $categories,
@@ -72,7 +72,7 @@ class ServiceCategoryController extends Controller
     public function find($id)
     {
         try {
-            $categories = ServiceCategory::findOrFail($id);
+            $categories = BlogsCategory::findOrFail($id);
             return response()->json([
                 'status' => 200,
                 'data' => $categories,
@@ -91,7 +91,7 @@ class ServiceCategoryController extends Controller
     public function edit($id)
     {
         try {
-            $categories = ServiceCategory::findOrFail($id);
+            $categories = BlogsCategory::findOrFail($id);
             return response()->json([
                 'status' => 200,
                 'data' => $categories,
@@ -99,7 +99,7 @@ class ServiceCategoryController extends Controller
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Service Category not found.',
+                'message' => 'Blog category not found.',
             ], 404);
         } catch (\Exception $e) {
             return response()->json([
@@ -112,10 +112,10 @@ class ServiceCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ServiceCatRequest $request, $id)
+    public function update(BlogsCatRequest $request, $id)
     {
         try {
-            $categories = ServiceCategory::findOrFail($id);
+            $categories = BlogsCategory::findOrFail($id);
             $categories->categoryName = $request->categoryName;
             $categories->slug = Str::slug($request->categoryName);
             $categories->description = $request->description;
@@ -128,17 +128,17 @@ class ServiceCategoryController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Team member updated successfully.',
+                'message' => 'Blog category updated successfully.',
             ]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Team Member not found.',
+                'message' => 'Blog category not found.',
             ], 404);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 500,
-                'message' => 'An unexpected error occurred.',
+                'message' => 'Blog category error occurred.',
             ], 500);
         }
     }
@@ -157,7 +157,7 @@ class ServiceCategoryController extends Controller
         $file = $request->file('categoryImage');
         $extension = $file->getClientOriginalExtension();
         $imageName = time() . '.' . $extension;
-        $file->move(public_path('uploads/service/category'), $imageName);
+        $file->move(public_path('uploads/blogs/category'), $imageName);
 
         return $imageName;
     }
@@ -169,7 +169,7 @@ class ServiceCategoryController extends Controller
     public function destroy($id)
     {
         try {
-            $categories = ServiceCategory::findOrFail($id);
+            $categories = BlogsCategory::findOrFail($id);
 
             if ($categories->image) {
                 $this->deleteImage($categories->image);
@@ -179,12 +179,12 @@ class ServiceCategoryController extends Controller
 
             return response()->json([
                 'status' => 200,
-                'message' => 'Service Category Deleted Successfully',
+                'message' => 'Blog category Deleted Successfully',
             ]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Service Category not found.',
+                'message' => 'Blog category not found.',
             ], 404);
         } catch (\Exception $e) {
             return response()->json([
@@ -196,7 +196,7 @@ class ServiceCategoryController extends Controller
 
     private function deleteImage($imageName)
     {
-        $imagePath = public_path('uploads/service/category/') . $imageName;
+        $imagePath = public_path('uploads/blogs/category/') . $imageName;
 
         if (file_exists($imagePath)) {
             if (!unlink($imagePath)) {
@@ -206,7 +206,7 @@ class ServiceCategoryController extends Controller
     }
     public function changeStatus($catId){
 
-        $category = ServiceCategory::findOrFail($catId); // Find the category by ID
+        $category = BlogsCategory::findOrFail($catId); // Find the category by ID
 
         // dd($catId);
         $newStatus = $category->status == 0 ? 1 : 0;

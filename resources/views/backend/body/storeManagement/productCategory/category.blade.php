@@ -92,7 +92,7 @@
         // Store the original values of the form title and button text
         const originalTitle = $('#pr_form_title').text();
         const originalButtonText = $('#saveBtn').text();
-        
+
         // show error
         function showError(name, message) {
             // alert('hello');
@@ -100,10 +100,10 @@
             $(name).focus(); // Set focus to the input field
             $(`${name}_error`).show().text(message); // Show error message
         }
-        
+
         // Function to handle form submission
         function handleFormSubmission(url, type, formData) {
-            
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -126,7 +126,7 @@
                         // Restore original form title and button text
                         $('#pr_form_title').text(originalTitle);
                         $('#saveBtn').text(originalButtonText);
-                    } 
+                    }
                     else {
                         // Handle validation errors
                         if (res.errors) {
@@ -160,7 +160,7 @@
             e.preventDefault();
             let formData = new FormData($('.data_category')[0]);
             let id = $('#catId').val();
-            alert(id);
+            // alert(id);
 
             if (id) {
                 handleFormSubmission(`/backend/product/category/update/${id}`, 'POST', formData);
@@ -219,7 +219,7 @@
                                 const tr = `
                                         <tr>
                                             <td>${index + 1}</td>
-                                            
+
                                             <td>${category.image ? `<img src="/uploads/product/category/${category.image}" alt="category Image" width="50">` : 'photo not found'}</td>
                                             <td>${category.categoryName ?? ""}</td>
                                             <td>

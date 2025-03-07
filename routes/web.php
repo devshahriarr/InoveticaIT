@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\backend\BlogsCategoryController;
+use App\Http\Controllers\backend\BlogsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\backend\ServiceController;
 use App\Http\Controllers\backend\ServiceCategoryController;
@@ -51,6 +53,25 @@ Route::middleware('auth')->group(function () {
         Route::controller(ServiceController::class)->group(function () {
             Route::get('/', 'index')->name('backend.services');
             Route::post('/store', 'store')->name('backend.service.store');
+            // Route::get('/category/view', 'show')->name('category.view');
+            // Route::get('/category/edit/{id}', 'edit')->name('category.edit');
+            // Route::post('/category/update/{id}', 'update')->name('category.update');
+            // Route::get('/category/delete/{id}', 'delete')->name('category.delete');
+        });
+    });
+    Route::prefix('backend/blogs')->group(function () {
+        Route::controller(BlogsCategoryController::class)->group(function () {
+            Route::get('/categories', 'index')->name('backend.blogs.add');
+            Route::post('/category/store', 'store')->name('backend.blogs.category.store');
+            Route::get('/category/view', 'show')->name('blogs.category.view');
+            Route::get('/category/edit/{id}', 'edit')->name('blogs.category.edit');
+            Route::post('/category/update/{id}', 'update')->name('blogs.category.update');
+            Route::get('/category/delete/{id}', 'destroy')->name('blogs.category.delete');
+            Route::post('/category/status/{catId}', 'changeStatus')->name('blogs.backend.blogs.category.status');
+        });
+        Route::controller(BlogsController::class)->group(function () {
+            Route::get('/', 'index')->name('backend.blogs');
+            Route::post('/store', 'store')->name('backend.blogs.store');
             // Route::get('/category/view', 'show')->name('category.view');
             // Route::get('/category/edit/{id}', 'edit')->name('category.edit');
             // Route::post('/category/update/{id}', 'update')->name('category.update');

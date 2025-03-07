@@ -19,13 +19,13 @@ class ServiceController extends Controller
     {
         $services = Service::all();
         // dd($services);
-        return response()->json($services, 200);
-        // return view('backend.body.service.service', compact('services'));
+        // return response()->json($services, 200);
+        return view('backend.body.service.service', compact('services'));
     }
     public function find($id)
     {
         // dd($id);
-        
+
         try {
             $service = Service::find($id);
             if (!$service) {
@@ -34,7 +34,7 @@ class ServiceController extends Controller
                     'message' => 'Service not found!',
                 ], 404);
             }
-    
+
             return response()->json([
                 'status' => 200,
                 'data' => $service,
