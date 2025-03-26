@@ -82,7 +82,7 @@
                         </div>
                         <div class="modal-body">
                             <form class="BlogsCatForm" enctype="multipart/form-data">
-                                @csrf
+
                                 <input type="hidden" id="catId" name="id">
                                 <div class="mb-3">
                                     <label for="validationServer01" class="form-label">Category name</label>
