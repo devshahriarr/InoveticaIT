@@ -82,7 +82,7 @@
                         </div>
                         <div class="modal-body">
                             <form class="BlogsCatForm" enctype="multipart/form-data">
-
+                                @csrf
                                 <input type="hidden" id="catId" name="id">
                                 <div class="mb-3">
                                     <label for="validationServer01" class="form-label">Category name</label>
@@ -138,12 +138,12 @@
 
 
 <script>
-            // Function to show Ajax Validation error
-            function showError(name, message) {
-            $(name).addClass('is-invalid');
-            $(name).focus();
-            $(`${name}_error`).text(message);
-        }
+    // Function to show Ajax Validation error
+    function showError(name, message) {
+        $(name).addClass('is-invalid');
+        $(name).focus();
+        $(`${name}_error`).text(message);
+    }
     function validateForm() {
         let isValid = true;
 
@@ -192,7 +192,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
+            console.log(url);
+            console.log(type);
+            console.log(formData);
             $.ajax({
                 url: url,
                 type: type,
@@ -201,6 +203,7 @@
                 contentType: false,
                 success: function(res) {
                     if (res.status == 200) {
+                        alert("ok");
                         $('#addEditModal').modal('hide');
                         $('.BlogsCatForm')[0].reset();
                         toastr.success(res.message);
@@ -217,6 +220,7 @@
                 },
                 error: function(err) {
                     alert(err.responseJSON.errors);
+                    console.log(err);
                     if (err.status === 422) { // Validation error
                         var errors = err.responseJSON.errors;
                         if (errors.categoryName ) {

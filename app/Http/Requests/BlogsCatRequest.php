@@ -24,7 +24,7 @@ class BlogsCatRequest extends FormRequest
         $rules = [
             'categoryName' => 'required|max:100'
         ];
-
+        dd($rules);
         // Additional rule for creating a new team member
         if ($this->isMethod('post')) {
             $rules['image'] = 'image|mimes:jpeg,png,jpg,gif,webp|max:2048';
