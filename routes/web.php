@@ -110,8 +110,8 @@ Route::middleware('auth')->group(function () {
             // Route::get('/category/delete/{id}', 'delete')->name('category.delete');
         });
         Route::controller(productController::class)->group(function () {
-            Route::get('/all', 'index')->name('backend.product');
             Route::get('/', 'allProducts')->name('backend.product.data');
+            Route::get('/all', 'index')->name('backend.product');
             Route::post('/store', 'store')->name('backend.product.add');
             Route::get('/list/view', 'show')->name('backend.product.list');
             Route::get('/view/details', 'find')->name('backend.product.view.details');

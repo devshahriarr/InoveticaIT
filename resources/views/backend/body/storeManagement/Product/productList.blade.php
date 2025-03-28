@@ -21,16 +21,18 @@
                         </nav>
                     </div>
                     <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-                        <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable" data-bs-toggle="modal" data-bs-target="#addEditModal" id="addNewButton">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="acorn-icons acorn-icons-plus undefined">
-                                <path d="M10 17 10 3M3 10 17 10"></path>
-                            </svg>
-                            <span>Add New</span>
-                        </button>
+                        <a href="{{ route('backend.product') }}">
+                            <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable" data-bs-toggle="modal" data-bs-target="#addEditModal" id="addNewButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="acorn-icons acorn-icons-plus undefined">
+                                    <path d="M10 17 10 3M3 10 17 10"></path>
+                                </svg>
+                                <span>Add New</span>
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>
-           
+
             <!-- Team Table -->
             <table class="table table-striped">
                 <thead>
@@ -48,70 +50,74 @@
                     <!-- Data will be inserted here by AJAX -->
 
                     @php
-                                    $serialNumber = 1;
-                                    // dd($products->varient);
-                                @endphp
-                                @if ($allProducts->count() > 0)
-                                    @foreach ($allProducts as $product)
+                    $serialNumber = 1;
+                    // dd($products->varient);
+                    @endphp
+                    @if ($allProducts->count() > 0)
+                    @foreach ($allProducts as $product)
 
-                                        <tr>
-                                            <td>{{ $serialNumber++ }}</td>
+                    <tr>
+                        <td>{{ $serialNumber++ }}</td>
 
-                                           <td>
-                                                <img src="{{ asset($product->product_img)??'' }}"
-                                                    style="height: 50px; object-fit: cover;" class="img-fluid"
-                                                    alt="Products Image">
-                                            </td>
-                                            <td>{{ Illuminate\Support\Str::limit($product->product_name, 29) }}</td>
-                                            
-                                            @php
-                                                $subcategory=App\Models\ProductCategory::find($product->subcategory_id);
-                                            @endphp
-                                            
-                                            <td>
-                                                ৳{{ $product->product_price ?? 0 }}
-                                            </td>
+                        <td>
+                            <img src="{{ asset($product->product_img)??'' }}"
+                                style="height: 50px; object-fit: cover;" class="img-fluid"
+                                alt="Products Image">
+                        </td>
+                        <td>{{ Illuminate\Support\Str::limit($product->product_name, 29) }}</td>
 
-                                            <td>
-                                                <form action="{{ route('backend.product.status', $product->id) }}" method="POST">
-                                                    @csrf
-                                                    @if ($product->status == 0)
-                                                        <button class="btn btn-sm btn-danger status_inactive"
-                                                            value="{{ $product->id }}">Inactive</button>
-                                                    @else
-                                                    
-                                                        <button class="btn btn-sm btn-success status_active"
-                                                            value="{{ $product->id }}">Active</button>
-                                                    @endif
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <div class="col">
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-sm btn-info dropdown-toggle" type="button"
-                                                            data-bs-toggle="dropdown" aria-expanded="false">Action</button>
-                                                        <ul class="dropdown-menu" data-popper-placement="bottom-start"
-                                                            style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(0px, 40px, 0px);">
-                                                            <li><a class="dropdown-item"
-                                                                    href="{{ route('backend.product.view.details', $product->id) }}">View
-                                                                    Details</a></li>
-                                                            <li><a class="dropdown-item"
-                                                                    href="{{ route('backend.product.edit', $product->id) }}">Edit</a>
-                                                            </li>
-                                                            <li><a class="dropdown-item"
-                                                                    href="{{ route('backend.product.delete', $product->id) }}"
-                                                                    id="delete">Delete</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                        @php
+                        $category=App\Models\ProductCategory::find($product->product_cat_id);
+                        @endphp
+                        @php
+                        $subcategory=App\Models\ProductCategory::find($product->subcategory_id);
+                        @endphp
+
+                        <td>{{ $category->categoryName }}</td>
+                        <td>
+                            ৳{{ $product->product_price ?? 0 }}
+                        </td>
+
+                        <td>
+                            <form action="{{ route('backend.product.status', $product->id) }}" method="POST">
+                                @csrf
+                                @if ($product->status == 0)
+                                <button class="btn btn-sm btn-danger status_inactive"
+                                    value="{{ $product->id }}">Inactive</button>
                                 @else
-                                    <tr>
-                                        <td colspan="6" class="text-center text-warning">Data not Found</td>
-                                    </tr>
+
+                                <button class="btn btn-sm btn-success status_active"
+                                    value="{{ $product->id }}">Active</button>
                                 @endif
+                            </form>
+                        </td>
+                        <td>
+                            <div class="col">
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-info dropdown-toggle" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">Action</button>
+                                    <ul class="dropdown-menu" data-popper-placement="bottom-start"
+                                        style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(0px, 40px, 0px);">
+                                        <li><a class="dropdown-item"
+                                                href="{{ route('backend.product.view.details', $product->id) }}">View
+                                                Details</a></li>
+                                        <li><a class="dropdown-item"
+                                                href="{{ route('backend.product.edit', $product->id) }}">Edit</a>
+                                        </li>
+                                        <li><a class="dropdown-item"
+                                                href="{{ route('backend.product.delete', $product->id) }}"
+                                                id="delete">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                    @else
+                    <tr>
+                        <td colspan="6" class="text-center text-warning">Data not Found</td>
+                    </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -120,15 +126,15 @@
 
 <!-- Page Specific Scripts Start -->
 
-    <script src="{{ asset('assets') }}/js/vendor/quill.min.js"></script>
+<script src="{{ asset('assets') }}/js/vendor/quill.min.js"></script>
 
-    <script src="{{ asset('assets') }}/js/vendor/quill.active.js"></script>
+<script src="{{ asset('assets') }}/js/vendor/quill.active.js"></script>
 
-    <script src="{{ asset('assets') }}/js/forms/controls.editor.js"></script>
+<script src="{{ asset('assets') }}/js/forms/controls.editor.js"></script>
 
-    <script src="{{ asset('assets') }}/js/forms/controls.tag.js"></script>
-    <script src="{{ asset('assets') }}/js/forms/controls.select2.js"></script>
-    <script src="{{ asset('assets') }}/js/vendor/tagify.min.js"></script>
+<script src="{{ asset('assets') }}/js/forms/controls.tag.js"></script>
+<script src="{{ asset('assets') }}/js/forms/controls.select2.js"></script>
+<script src="{{ asset('assets') }}/js/vendor/tagify.min.js"></script>
 
 <!-- Page Specific Scripts End -->
 <!-- Page Specific Custom Scripts Start -->
@@ -212,15 +218,15 @@
         }
 
         // Validate product URL
-        if (url){
+        if (url) {
             let urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
             if (!urlPattern.test(url)) {
                 showError('#pr_link', 'Please provide a valid URL.');
                 isValid = false;
-            // }
-            // else if (!urlPattern.test(url)) {
-            //     showError('#pr_link', 'Please provide a valid URL.');
-            //     isValid = false;
+                // }
+                // else if (!urlPattern.test(url)) {
+                //     showError('#pr_link', 'Please provide a valid URL.');
+                //     isValid = false;
             }
         }
 
@@ -404,7 +410,7 @@
                         // var button = $('#categoryButton_' + categoryId);
                         if (response.status == 200) {
                             var button = $('#product_status' +
-                            product_id);
+                                product_id);
                             if (response.newStatus == 1) {
                                 button.removeClass('bg-danger').addClass('bg-success').text('Active');
                             } else {
@@ -418,7 +424,6 @@
             });
         });
     });
-
-    </script>
+</script>
 <!-- Page Specific Custom Scripts End -->
 @endsection

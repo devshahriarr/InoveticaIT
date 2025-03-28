@@ -12,7 +12,9 @@ class BlogsController extends Controller
      */
     public function index()
     {
-        //
+        
+        return view('backend.body.blogs.index');
+         
     }
 
     /**

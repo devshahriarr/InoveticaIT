@@ -12,7 +12,7 @@
             <div class="page-title-container">
                 <div class="row">
                     <div class="col-12 col-sm-6">
-                        <h1 class="mb-0 pb-0 display-4" id="title">Team Section</h1>
+                        <h1 class="mb-0 pb-0 display-4" id="title">Product Section</h1>
                         <nav class="breadcrumb-container d-inline-block" aria-label="breadcrumb">
                             <ul class="breadcrumb pt-0">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -35,7 +35,7 @@
                     <form id="productAddForm"
                         enctype="multipart/form-data" class="productForm row g-3">
                         @csrf
-                        <input type="text" id="product_id" name="id">
+                        <input type="hidden" id="product_id" name="id">
                         <div class="col-12 col-sm-6 col-md-6 col-xl-4">
                             <label for="" class="form-label">Product name</label>
                             <input type="text" name="name" class="form-control"
@@ -94,7 +94,7 @@
                             <span id="pr_tags_error" class="text-danger"></span>
                         </div>
                         <div class="col-12">
-                            <button id="save_product" class="btn btn-primary save_product" type="submit">Submit form</button>
+                            <button id="save_product" class="btn btn-primary save_product" type="submit">Save Product</button>
                         </div>
                     </form>
                 </div>
