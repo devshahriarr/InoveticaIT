@@ -231,8 +231,18 @@
                     </a>
                     <ul id="apps">
                         <li>
+                            <a href="{{ route('backend.blogs.category.add') }}">
+                                <span class="label">Categories</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="{{ route('backend.blogs.add') }}">
-                                <span class="label">Post</span>
+                                <span class="label">New Post</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('backend.blogs.view') }}">
+                                <span class="label">Manage Post</span>
                             </a>
                         </li>
                         <li>

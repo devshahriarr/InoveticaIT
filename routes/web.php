@@ -72,18 +72,18 @@ Route::middleware('auth')->group(function () {
     });
     Route::prefix('backend/blogs')->group(function () {
         Route::controller(BlogsCategoryController::class)->group(function () {
-            Route::get('/categories', 'index')->name('backend.blogs.add');
+            Route::get('/categories', 'index')->name('backend.blogs.category.add');
             Route::post('/category/store', 'store')->name('backend.blogs.category.store');
-            Route::get('/category/view', 'show')->name('blogs.category.view');
+            Route::get('/category/view', 'show')->name('backend.blogs.category.view');
             Route::get('/category/edit/{id}', 'edit')->name('blogs.category.edit');
             Route::post('/category/update/{id}', 'update')->name('blogs.category.update');
             Route::get('/category/delete/{id}', 'destroy')->name('blogs.category.delete');
             Route::post('/category/status/{catId}', 'changeStatus')->name('blogs.backend.blogs.category.status');
         });
         Route::controller(BlogsController::class)->group(function () {
-            Route::get('/', 'index')->name('backend.blogs');
+            Route::get('/', 'index')->name('backend.blogs.add');
             Route::post('/store', 'store')->name('backend.blogs.store');
-            // Route::get('/category/view', 'show')->name('category.view');
+            Route::get('/view', 'show')->name('backend.blogs.view');
             // Route::get('/category/edit/{id}', 'edit')->name('category.edit');
             // Route::post('/category/update/{id}', 'update')->name('category.update');
             // Route::get('/category/delete/{id}', 'delete')->name('category.delete');
@@ -114,11 +114,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/', 'allProducts')->name('backend.product.data');
             Route::post('/store', 'store')->name('backend.product.add');
             Route::get('/list/view', 'show')->name('backend.product.list');
-
-            Route::post('/status/{prId}', 'changeStatus')->name('backend.product.category.status');
+            Route::get('/view/details', 'find')->name('backend.product.view.details');
+            
+            Route::post('/status/{prId}', 'changeStatus')->name('backend.product.status');
             Route::get('/edit/{id}', 'edit')->name('backend.product.edit');
             Route::post('/update/{id}', 'update')->name('backend.product.update');
-            Route::get('/destroy/{id}', 'delete')->name('product.delete');
+            Route::get('/destroy/{id}', 'delete')->name('backend.product.delete');
         });
     });
 

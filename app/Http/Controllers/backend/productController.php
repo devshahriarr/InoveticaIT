@@ -104,9 +104,17 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show()
     {
-        //
+        // $products = Product::orderByDesc('id')->with('varient')->get();
+
+
+        // return view('backend.products.view', compact('products'));
+        
+        $allProducts = Product::all();
+        
+        return view('backend.body.storeManagement.product.productList', compact('allProducts'));
+        // return view('backend.body.storeManagement.Product.productList' compact('allProducts'));
     }
 
     /**

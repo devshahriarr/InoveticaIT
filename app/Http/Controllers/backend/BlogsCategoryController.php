@@ -25,7 +25,7 @@ class BlogsCategoryController extends Controller
      */
     public function store(BlogsCatRequest $request)
     {
-        dd($request);
+        // dd($request->all());
         try {
             $category = new BlogsCategory;
             $category->categoryName = $request->categoryName;

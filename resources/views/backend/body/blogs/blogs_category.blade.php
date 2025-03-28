@@ -88,7 +88,7 @@
                                     <label for="validationServer01" class="form-label">Category name</label>
                                     <input type="text" name="categoryName" class="form-control"
                                         id="cat_name" value="" required="">
-                                        <span class="text-danger" id="cat_name_error"></span>
+                                    <span class="text-danger" id="cat_name_error"></span>
                                     <div class="valid-feedback">Looks good!</div>
                                     <!-- <div id="cat_name_error" class="invalid-feedback">Please provide a valid Name.
                                     </div> -->
@@ -144,6 +144,7 @@
         $(name).focus();
         $(`${name}_error`).text(message);
     }
+
     function validateForm() {
         let isValid = true;
 
@@ -183,18 +184,16 @@
 
         // Function to handle form submission
         function handleFormSubmission(url, type, formData) {
-            if (!validateForm()) {
-                return; // If the form is invalid, do not proceed with the AJAX request
-            }
+            // if (!validateForm()) {
+            //     return; // If the form is invalid, do not proceed with the AJAX request
+            // }
 
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            console.log(url);
-            console.log(type);
-            console.log(formData);
+
             $.ajax({
                 url: url,
                 type: type,
@@ -203,13 +202,11 @@
                 contentType: false,
                 success: function(res) {
                     if (res.status == 200) {
-                        alert("ok");
                         $('#addEditModal').modal('hide');
                         $('.BlogsCatForm')[0].reset();
                         toastr.success(res.message);
                         blogCatView(); // Refresh the table data
-                    }
-                    else {
+                    } else {
                         // Handle validation errors
                         if (res.errors) {
                             for (let [field, messages] of Object.entries(res.errors)) {
@@ -219,15 +216,14 @@
                     }
                 },
                 error: function(err) {
-                    alert(err.responseJSON.errors);
                     console.log(err);
                     if (err.status === 422) { // Validation error
                         var errors = err.responseJSON.errors;
-                        if (errors.categoryName ) {
-                            showError('#cat_name', errors.categoryName );
+                        if (errors.categoryName) {
+                            showError('#cat_name', errors.categoryName);
                         }
-                        if (errors.categoryImage ) {
-                            showError('#cat_image', errors.categoryImage );
+                        if (errors.categoryImage) {
+                            showError('#cat_image', errors.categoryImage);
                         }
                         // Handle other validation errors similarly
                     } else {
@@ -244,9 +240,21 @@
             let formData = new FormData($('.BlogsCatForm')[0]);
             let id = $('#catId').val();
 
-            if (!validateForm()) {
-                return; // Prevent submission if validation fails
-            }
+            // Very very Important code is here. if need to check form data is capturing all data properly or not, we should use this code
+            // // Create FormData from the actual form element
+            // let formElement = $('.BlogsCatForm')[0];
+            // let formData = new FormData(formElement); // This captures all form fields
+
+            // // Verify form data content
+            // for (var pair of formData.entries()) {
+            //     console.log(pair[0] + ', ' + pair[1]);
+            // }
+
+
+
+            // if (!validateForm()) {
+            //     return; // Prevent submission if validation fails
+            // }
 
             if (id) {
                 handleFormSubmission(`/backend/blogs/category/update/${id}`, 'POST', formData);
@@ -258,7 +266,7 @@
         // Function to refresh the team data table
         function blogCatView() {
             $.ajax({
-                url: '{{ route("blogs.category.view") }}',
+                url: '{{ route("backend.blogs.category.view") }}',
                 method: 'GET',
                 success: function(res) {
                     if (res.status == 200) {
