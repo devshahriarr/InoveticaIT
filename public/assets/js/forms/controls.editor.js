@@ -15,6 +15,8 @@ class EditorControls {
       return;
     }
 
+    this.quill = null;
+    
     this.quillToolbarOptions = [
       ['bold', 'italic', 'underline', 'strike'],
       ['blockquote', 'code-block'],
@@ -43,7 +45,8 @@ class EditorControls {
 
   _initStandardEditor() {
     if (document.getElementById('quillEditor')) {
-      new Quill('#quillEditor', {
+      this.quill = new Quill('#quillEditor', {
+      // new Quill('#quillEditor', {
         modules: {
           toolbar: this.quillToolbarOptions,
           active: {},

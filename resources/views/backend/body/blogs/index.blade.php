@@ -33,8 +33,8 @@
             <div class="card">
                 <div class="card-body">
                     <form id="productAddForm"
-                        enctype="multipart/form-data" class="productForm row g-3">
-                        @csrf
+                        enctype="multipart/form-data" class="blogPost row g-3">
+                        
                         <input type="hidden" id="product_id" name="id">
                         <div class="col-12 col-sm-6 col-md-6 col-xl-4">
                             <label for="" class="form-label">Post Title</label>
@@ -50,29 +50,30 @@
                         <div class="col-12 col-sm-6 col-md-6 col-xl-4">
                             <div class="w-100">
                                 <label class="form-label">Blog Category</label>
-                                <select id="select2Basic" name="product_category">
+                                <select id="select2Basic" name="blog_category_id">
                                     <option label="&nbsp;"></option>
                                     @if ($blog_categories->count() > 0)
-                                        @foreach ($blog_categories as $key => $Product_category)
-                                            <option value="{{ $Product_category->id }}">{{ $Product_category->categoryName }}</option>
+                                        @foreach ($blog_categories as $key => $blog_category)
+                                            <option value="{{ $blog_category->id }}">{{ $blog_category->categoryName }}</option>
                                         @endforeach
                                     @else
-                                        <option selected disabled>Please Add Product Category</option>
+                                        <option selected disabled>Please Select Blog Category</option>
                                     @endif
                                 </select>
                                 <span id="select2Basic_error" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 col-md-6 col-xl-4">
-                            <label class="form-label">Product Image</label>
+                            <label class="form-label">Blog Image</label>
                             <div class="input-group mb-3">
                                 <input type="file" name="img" class="form-control" id="img">
                                 <label class="input-group-text" for="inputGroupFile02">Upload</label>
                             </div>
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Product Description</label>
-                            <div class="html-editor sh-19 mb-3" id="quillEditor" name="desc"></div>
+                            <label class="form-label">Blog Description</label>
+                            <div class="html-editor sh-19 mb-3" id="quillEditor"></div>
+                            <!-- <input type="hidden" name="desc" id="quillContent"> -->
                             <span id="quillEditor_error" class="text-danger"></span>
                         </div>
                         <div class="col-12 col-sm-6 col-md-6">
@@ -83,18 +84,18 @@
 
                         </div>
                         <div class="col-12 col-sm-6 col-md-6">
-                            <label for="" class="form-label">Product URL</label>
-                            <input type="text" name="pr_link" class="form-control"
-                                id="pr_link" value="" required="">
-                            <span id="pr_link_error" class="text-danger"></span>
+                            <label for="" class="form-label">Link</label>
+                            <input type="text" name="post_link" class="form-control"
+                                id="post_link" value="" required="">
+                            <span id="post_link_error" class="text-danger"></span>
                         </div>
                         <div class="col-12">
-                            <label class="d-block form-label">Product Tags</label>
-                            <input id="tagsOutside" name="pr_tags" class="tagify--outside my-5" value="Dorayaki, Roti, Panbrioche" placeholder="Write Tags" />
-                            <span id="pr_tags_error" class="text-danger"></span>
+                            <label class="d-block form-label">Tags</label>
+                            <input id="tagsOutside" name="post_tags" class="tagify--outside my-5" value="Dorayaki, Roti, Panbrioche" placeholder="Write Tags" />
+                            <span id="post_tags_error" class="text-danger"></span>
                         </div>
                         <div class="col-12">
-                            <button id="save_product" class="btn btn-primary save_product" type="submit">Save Product</button>
+                            <button id="save_blog_post" class="btn btn-primary save_blog_post" type="submit">Save Post</button>
                         </div>
                     </form>
                 </div>
@@ -127,7 +128,7 @@
 
     <script src="{{ asset('assets') }}/js/vendor/quill.active.js"></script>
 
-    <script src="{{ asset('assets') }}/js/forms/controls.editor.js"></script>
+    <!-- <script src="{{ asset('assets') }}/js/forms/controls.editor.js"></script> -->
 
     <script src="{{ asset('assets') }}/js/forms/controls.tag.js"></script>
     <script src="{{ asset('assets') }}/js/forms/controls.select2.js"></script>
@@ -143,6 +144,18 @@
     tagify.on('add', function(e) {
         console.log('New tag added:', e.detail.data.value);
         // You can add your custom functionality here
+    });
+
+    // Initialize Quill editor
+    var quill = new Quill('#quillEditor', {
+        theme: 'snow', // or 'bubble' depending on your CSS
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, false] }],
+                ['bold', 'italic', 'underline'],
+                ['image', 'code-block']
+            ]
+        }
     });
 
     // Function to show ajax validation error
@@ -166,26 +179,27 @@
 
         // Get form values
         let name = $('input[name="name"]').val().trim();
-        let productCategory = $('select[name="product_category"]').val();
+        let Category = $('select[name="blog_category_id"]').val();
         let image = $('input[name="img"]').val();
-        let description = $('#quillEditor').text().trim();
+        let description = quill.getText().trim();
+        // let description = $('#quillEditor').text().trim();
         let price = $('input[name="price"]').val().trim();
-        let url = $('input[name="pr_link"]').val().trim();
-        let tags = $('input[name="pr_tags"]').val().trim();
+        let url = $('input[name="post_link"]').val().trim();
+        let tags = $('input[name="post_tags"]').val().trim();
 
         // console.log(description)
         // Validate product name
         if (name === '') {
-            showError('#name', 'Product name is required.');
+            showError('#name', 'Post Title is required.');
             isValid = false;
         } else if (name.length > 100) {
-            showError('#name', 'Product name cannot exceed 100 characters.');
+            showError('#name', 'Post Title cannot exceed 100 characters.');
             isValid = false;
         }
 
         // Validate product category
-        if (!productCategory) {
-            showError('#select2Basic', 'Please select a product category.');
+        if (!Category) {
+            showError('#select2Basic', 'Please select a Blog category.');
             isValid = false;
         }
 
@@ -201,36 +215,29 @@
 
         // Validate product description
         if (description === '') {
-            showError('#quillEditor', 'Product description is required.');
+            showError('#quillEditor', 'Blog description is required.');
             isValid = false;
         }
 
         // Validate product price
-        if (price === '') {
-            showError('#price', 'Product price is required.');
-            isValid = false;
-        } else if (isNaN(price) || parseFloat(price) <= 0) {
-            showError('#price', 'Please enter a valid price.');
+        if (isNaN(price) || parseFloat(price) <= 0) {
+            showError('#price', 'Please enter a valid number.');
             isValid = false;
         }
 
-        // Validate product URL
+        // Validate URL
         if (url){
             let urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
             if (!urlPattern.test(url)) {
-                showError('#pr_link', 'Please provide a valid URL.');
+                showError('#post_link', 'Please provide a valid URL.');
                 isValid = false;
-            // }
-            // else if (!urlPattern.test(url)) {
-            //     showError('#pr_link', 'Please provide a valid URL.');
-            //     isValid = false;
             }
         }
 
 
         // Validate product tags (optional, only if provided)
         if (tags && tags.split(',').length > 5) {
-            showError('input[name="pr_tags"]', 'You can only enter up to 5 tags.');
+            showError('input[name="post_tags"]', 'You can only enter up to 5 tags.');
             isValid = false;
         }
 
@@ -261,9 +268,9 @@
                 contentType: false,
                 success: function(res) {
                     // alert(res);
-                    // console.log(res);
+                    console.log(res);
                     if (res.status == 200) {
-                        $('.productForm')[0].reset();
+                        $('.blogPost')[0].reset();
                         toastr.success(res.message);
                         productView(); // Refresh the table data
                     }else if(res.status == 500){
@@ -273,10 +280,10 @@
                             // toastr.warning(res.message.name);
                             showError('#name', res.message.name);
                         }
-                        if(res.message.product_category){
-                            // console.log(res.message.product_category);
-                            // toastr.warning(res.message.product_category);
-                            showError('#select2Basic', res.message.product_category);
+                        if(res.message.blog_category_id){
+                            // console.log(res.message.blog_category_id);
+                            // toastr.warning(res.message.blog_category_id);
+                            showError('#select2Basic', res.message.blog_category_id);
                         }
                         if(res.message.price){
                             // toastr.warning(res.message.price);
@@ -302,23 +309,42 @@
         }
 
         // Event listener for save button
-        $('.save_product').on('click', function(e) {
+        $('.save_blog_post').on('click', function(e) {
             e.preventDefault();
-            let formData = new FormData($('.productForm')[0]);
-            // console.log(formData);
+            // Initialize FormData from the form
+            let allData = new FormData($('.blogPost')[0]);
+            allData.append('desc', quill.root.innerHTML);
+
+            // Get Quill editor content
+            // let quillContent = quill.root.innerHTML; // Gets HTML content
+            // Alternatively, use quill.getContents() for Quill's Delta format if needed
+            // let quillContent = JSON.stringify(quill.getContents());
+
+            // Set the content to the hidden input
+            // $('#quillContent').val(quillContent);
+            console.log('Quill content:', quill.root.innerHTML);
+            console.log('Hidden input value:', $('#quillContent').val());
+            // Alternatively, append directly to FormData (if you don't use the hidden input)
+            // allData.append('desc', quillContent);
+
+            // Log FormData for debugging
+            for (var pair of allData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
+            console.log(allData);
             let id = $('#product_id').val();
             if (id) {
-                handleFormSubmission(`/backend/product/update/${id}`, 'POST', formData);
+                handleFormSubmission(`/backend/blog/update/${id}`, 'POST', allData);
             } else {
                 // console.log(formData);
-                handleFormSubmission('{{ route("backend.product.add") }}', 'POST', formData);
+                handleFormSubmission('{{ route("backend.blogs.store") }}', 'POST', allData);
             }
         });
 
         // Function to refresh the team data table
         function productView() {
             $.ajax({
-                url: '{{ route("backend.product.data") }}',
+                url: '{{ route("backend.blogs.view.all") }}',
                 method: 'GET',
                 success: function(res) {
                     if (res.status == 200) {
@@ -355,7 +381,7 @@
                                 <tr>
                                     <td colspan="6" class="text-center text-warning mb-2">Data Not Found</td>
                                     <td class="text-center">
-                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEditModal">Add product_data Info <i data-feather="plus"></i></button>
+                                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEditModal">Add product data Info <i data-feather="plus"></i></button>
                                     </td>
                                 </tr>`);
                         }
@@ -390,7 +416,7 @@
             let id = $(this).data('id');
             // alert(id);
             $.ajax({
-                url: `/backend/product/edit/${id}`,
+                url: `/backend/blog/edit/${id}`,
                 type: 'GET',
                 success: function(data) {
                     console.log(data);
@@ -404,9 +430,9 @@
                         $('#quillEditor').val(product_data.product_desc);
                         $('#img').attr('src', product_data.product_img ? `/uploads/product_data/${product_data.product_img}` : '');
                         $('#price').val(product_data.product_price);
-                        $('#pr_link').val(product_data.product_link);
-                        $('#pr_tags').val(product_data.product_tags);
-                        $('#save_product').text('Update');
+                        $('#post_link').val(product_data.product_link);
+                        $('#post_tags').val(product_data.product_tags);
+                        $('#save_blog_post').text('Update');
                     } else {
                         toastr.warning(res.message);
                     }
@@ -438,7 +464,7 @@
                         }
                     });
                     $.ajax({
-                        url: `/backend/product/destroy/${id}`,
+                        url: `/backend/blog/destroy/${id}`,
                         type: 'GET',
                         success: function(res) {
                             // console.log(res);
@@ -466,7 +492,7 @@
             var product_id = $(this).data('id');
             // alert(product_id);
             $.ajax({
-                url: '/backend/product/status/' + product_id,
+                url: '/backend/blog/status/' + product_id,
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'

@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function () {
         Route::controller(BlogsController::class)->group(function () {
             Route::get('/', 'index')->name('backend.blogs.add');
             Route::post('/store', 'store')->name('backend.blogs.store');
+            Route::get('/view/all', 'allPost')->name('backend.blogs.view.all');
             Route::get('/view', 'show')->name('backend.blogs.view');
             // Route::get('/category/edit/{id}', 'edit')->name('category.edit');
             // Route::post('/category/update/{id}', 'update')->name('category.update');
