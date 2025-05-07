@@ -4,10 +4,11 @@ namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Product;  
+use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Cache;
+use Log;
 class ProductController extends Controller
 {
     /**
@@ -24,7 +25,11 @@ class ProductController extends Controller
     public function allProducts()
     {
         try {
-            $allProducts = Product::all();
+            $allProducts = Cache::remember('products_all', now()->addMinutes(60), function () {
+                \Log::info('Fetching products from database for allProducts');
+                return Product::all();
+            });
+            // $allProducts = Product::all();
             return response()->json([
                 'status' => 200,
                 'data' => $allProducts,
@@ -73,6 +78,10 @@ class ProductController extends Controller
 
             $products->save();
 
+            // redis cache clear
+            Cache::forget('products_all');
+
+
             return response()->json([
                 'status' => 200,
                 'message' => 'New Product added successfully',
@@ -110,9 +119,14 @@ class ProductController extends Controller
 
 
         // return view('backend.products.view', compact('products'));
-        
-        $allProducts = Product::all();
-        
+
+        // $allProducts = Product::all();
+
+        $allProducts = Cache::remember('products_all', now()->addMinutes(60), function () {
+            \Log::info('Fetching products from database for show');
+            return Product::all();
+        });
+
         return view('backend.body.storeManagement.product.productList', compact('allProducts'));
         // return view('backend.body.storeManagement.Product.productList' compact('allProducts'));
     }
@@ -123,7 +137,10 @@ class ProductController extends Controller
     public function edit($id)
     {
         try {
-            $products = Product::findOrFail($id);
+            // $products = Product::findOrFail($id);
+            $products = Cache::remember("product_{$id}", now()->addMinutes(60), function () use ($id) {
+                return Product::findOrFail($id);
+            });
             // dd($products);
             return response()->json([
                 'status' => 200,
@@ -143,7 +160,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request);
-        
+
         // $products = Product::findOrFail($request->id);
         // $products->product_name = $request->name;
         // $products->product_cat_id = $request->product_category;
@@ -160,9 +177,9 @@ class ProductController extends Controller
 
         // return response()->json([
         //     'status' => 200,
-        //     'success' => 'Team member updated successfully.'
+        //     'success' => 'Product member updated successfully.'
         // ]);
-        
+
         try {
             $products = Product::findOrFail($id);
 
@@ -178,6 +195,8 @@ class ProductController extends Controller
 
             $products->save();
 
+            Cache::forget('products_all');
+            Cache::forget("product_{$id}");
             return response()->json([
                 'status' => 200,
                 'message' => 'Product updated successfully.',
@@ -185,7 +204,7 @@ class ProductController extends Controller
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Team Member not found.',
+                'message' => 'Product not found.',
             ], 404);
         } catch (\Exception $e) {
             return response()->json([
@@ -208,15 +227,16 @@ class ProductController extends Controller
             }
 
             $products->delete();
-
+            Cache::forget('products_all');
+            Cache::forget("product_{$id}");
             return response()->json([
                 'status' => 200,
-                'message' => 'Team Member Deleted Successfully',
+                'message' => 'Product Deleted Successfully',
             ]);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json([
                 'status' => 404,
-                'message' => 'Team Member not found.',
+                'message' => 'Product not found.',
             ], 404);
         } catch (\Exception $e) {
             return response()->json([
@@ -225,7 +245,8 @@ class ProductController extends Controller
             ], 500);
         }
     }
-    public function changeStatus($prId){
+    public function changeStatus($prId)
+    {
 
         $products = Product::findOrFail($prId); // Find the category by ID
 
@@ -234,12 +255,14 @@ class ProductController extends Controller
         $products->update([
             'status' => $newStatus
         ]);
+
+        Cache::forget('products_all');
+        Cache::forget("product_{$prId}");
         return response()->json([
             'status' => 200,
             'newStatus' => $newStatus,
             'message' => 'Status Changed Successfully',
         ]);
-        
     }
 
     private function deleteImage($imageName)
